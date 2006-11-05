@@ -3,10 +3,11 @@
  *
  * Copyright (C) Jan 10, 2006 by Stefan Kleine Stegemann
  */
-package org.openbbs.blackboard;
+package org.openbbs.blackboard.control;
 
 import java.util.List;
 
+import org.openbbs.blackboard.ks.KnowledgeSource;
 import org.openbbs.blackboard.plan.PlanStep;
 
 /**
@@ -16,9 +17,6 @@ import org.openbbs.blackboard.plan.PlanStep;
  */
 public interface BlackboardControlListener
 {
-   public void foundApplicableSources(BlackboardControl control, List<KnowledgeSource> sources);
-
    public void didSelectPossibleSteps(BlackboardControl control, List<PlanStep> steps);
-
    public void didSelectNextSource(BlackboardControl control, KnowledgeSource source);
 }

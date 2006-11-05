@@ -3,14 +3,14 @@
  *
  * Copyright by Stefan Kleine Stegemann, 2006
  */
-package org.openbbs.blackboard.debug;
+package org.openbbs.blackboard.control.debug;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
-import org.openbbs.blackboard.BasicControlDriver;
-import org.openbbs.blackboard.BlackboardControl;
+import org.openbbs.blackboard.control.BasicControlDriver;
+import org.openbbs.blackboard.control.BlackboardControl;
 
 /**
  * A ControlDriver that allows "manual" stepping.
