@@ -20,20 +20,25 @@ import org.apache.commons.lang.Validate;
 public class ObjectBlackboard implements Blackboard
 {
    private final Map<BlackboardObserver, ZoneSelector> observers = new HashMap<BlackboardObserver, ZoneSelector>();
-   private final CloneStrategy entryCloneStrategy;
+   private CloneStrategy cloneStrategy;
    private final Set<Zone> knownZones = new HashSet<Zone>();
    private final Map<Object, Zone> entries = new HashMap<Object, Zone>();
-
-   public ObjectBlackboard(CloneStrategy entryCloneStrategy)
-   {
-      Validate.notNull(entryCloneStrategy);
-      this.entryCloneStrategy = entryCloneStrategy;
-      this.openZone(Zone.DEFAULT);
-   }
 
    public ObjectBlackboard()
    {
       this(new CloneByMethodStrategy("clone"));
+   }
+
+   public ObjectBlackboard(CloneStrategy cloneStrategy)
+   {
+      this.setCloneStrategy(cloneStrategy);
+      this.openZone(Zone.DEFAULT);
+   }
+
+   public void setCloneStrategy(CloneStrategy cloneStrategy)
+   {
+      Validate.notNull(cloneStrategy);
+      this.cloneStrategy = cloneStrategy;
    }
 
    public synchronized void openZone(Zone zone)
@@ -76,7 +81,7 @@ public class ObjectBlackboard implements Blackboard
                   + " is already present on this blackboard");
       }
 
-      Object clonedEntry = this.entryCloneStrategy.clone(entry);
+      Object clonedEntry = this.cloneStrategy.clone(entry);
       this.entries.put(clonedEntry, zone);
       this.notifyEntryAdded(zone, clonedEntry);
    }
@@ -97,7 +102,7 @@ public class ObjectBlackboard implements Blackboard
       for (Object entry : this.entries.keySet()) {
          if (!zoneSelector.selects(this.zoneOf(entry))) continue;
 
-         if (filter.selects(entry)) return this.entryCloneStrategy.clone(entry);
+         if (filter.selects(entry)) return this.cloneStrategy.clone(entry);
       }
 
       return null;
@@ -112,7 +117,7 @@ public class ObjectBlackboard implements Blackboard
       for (Object entry : this.entries.keySet()) {
          if (!zoneSelector.selects(this.zoneOf(entry))) continue;
 
-         if (filter.selects(entry)) entries.add(this.entryCloneStrategy.clone(entry));
+         if (filter.selects(entry)) entries.add(this.cloneStrategy.clone(entry));
       }
 
       return entries;

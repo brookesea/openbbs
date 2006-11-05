@@ -3,9 +3,9 @@
  *
  * Copyright (C) Jan 14, 2006 by Stefan Kleine Stegemann
  */
-package org.openbbs.blackboard.debug;
+package org.openbbs.blackboard.control.debug;
 
-import org.openbbs.blackboard.BlackboardControl;
+import org.openbbs.blackboard.control.BlackboardControl;
 
 /**
  * @author stefan

@@ -25,7 +25,7 @@ public interface Blackboard
    public void closeZone(Zone zone);
 
    /**
-    * Write an non-null entry into a zone on the blackboard.
+    * Write a non-null entry into a zone on the blackboard.
     */
    public void write(Zone zone, Object entry);
 

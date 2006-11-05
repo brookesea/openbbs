@@ -3,7 +3,7 @@
  *
  * Copyright (C) Dec 21, 2005 by Stefan Kleine Stegemann
  */
-package org.openbbs.blackboard;
+package org.openbbs.blackboard.ks;
 
 /**
  * A KnowledgeSource is an expert for a particular aspect of
@@ -14,9 +14,6 @@ package org.openbbs.blackboard;
  */
 public interface KnowledgeSource
 {
-   public void attach(Blackboard blackboard, ZoneSelector zoneSelector);
-
-   public boolean canContribute();
-
-   public void contribute();
+   public boolean isEnabled(KSExecutionContext context);
+   public void execute(KSExecutionContext context);
 }

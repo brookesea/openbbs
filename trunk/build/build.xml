@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="OpenBBS" basedir=".." default="dist">
+   
+   <property name="build" value="${basedir}/build" />
+   <property name="build.classes" value="${build}/classes" />
+   <property name="build.tests" value="${build}/tests" />
+   <property name="dist" value="${basedir}/dist" />
+   
+   <!-- Private targets -->
+   <target name="-init-dist">
+      <delete dir="${dist}" />
+      <mkdir dir="${dist}" />
+   </target>
+   
+   <target name="-jar">
+      <jar destfile="${dist}/openbbs.jar" update="false">
+         <fileset dir="${build.classes}" />
+      </jar>
+   </target>
+
+   <!-- Private targets used only for dependencies -->
+   <target name="--dist" depends="-init-dist, -jar" />
+
+   <!-- Public targets with description -->
+   <target name="dist" description="Build all artefacts for a distribution" depends="--dist"/>
+
+</project>

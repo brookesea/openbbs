@@ -5,73 +5,80 @@
  */
 package org.openbbs.blackboard.plan;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
-import org.openbbs.blackboard.KnowledgeSource;
+import org.openbbs.blackboard.ks.KnowledgeSource;
 
 /**
- * A KnowledgeSource strategy which assigns a creditability for
- * a KnowledgeSource and a PlanStep. When the best source has to
- * be selected from a list of sources for a given PlanStep, the
- * source with the highest creditability for this step is selected.
- * <p />
- * Note that KnowledgeSources with a creditability lower or equal
- * than 0 or no creditability for a step are never considered when
- * selecting a source.
- *
  * @author sks
  */
-public class CreditabilityBasedStrategy implements KnowledgeSourceSelectionStrategy
+public class CreditabilityBasedStrategy implements KSSelectionStrategy
 {
    private final Map<PlanStep, Map<KnowledgeSource, Integer>> creditabilities = new HashMap<PlanStep, Map<KnowledgeSource, Integer>>();
+   private final Map<PlanStep, List<KnowledgeSource>> sources = new HashMap<PlanStep, List<KnowledgeSource>>();
 
-   public void setCreditability(PlanStep step, KnowledgeSource source, int creditability)
+   public void addKnowledgeSource(PlanStep step, KnowledgeSource ks, int creditability)
    {
       Validate.notNull(step);
-      Validate.notNull(source);
+      Validate.notNull(ks);
+      Validate.isTrue(!step.equals(NoStep.instance), "cannot add a \"no step \" to this strategy");
 
-      if (step.equals(NoStep.instance))
-         throw new IllegalArgumentException("cannot assign a source a creditability for " + step);
-
-      Map<KnowledgeSource, Integer> stepCreditabilities = this.creditabilities.get(step);
-      if (stepCreditabilities == null) {
-         stepCreditabilities = new HashMap<KnowledgeSource, Integer>();
-         this.creditabilities.put(step, stepCreditabilities);
+      List<KnowledgeSource> ksForStep = sources.get(step);
+      if (ksForStep == null) {
+         ksForStep = new ArrayList<KnowledgeSource>();
+         this.sources.put(step, ksForStep);
       }
+      ksForStep.add(ks);
 
-      stepCreditabilities.put(source, creditability);
+      this._setCreditability(step, ks, creditability);
+      this.sortKSByCreditability(step, ksForStep);
    }
 
-   public KnowledgeSource selectBestSource(PlanStep step, List<KnowledgeSource> sources)
+   public Collection<KnowledgeSource> getKnowledgeSources(PlanStep step)
    {
       Validate.notNull(step);
-      Validate.notNull(sources);
 
-      KnowledgeSource selectedSource = null;
-      int maxCreditability = 0;
-      for (KnowledgeSource source : sources) {
-         int sourceCreditability = this.creditabilityForSource(step, source);
-         if (sourceCreditability > 0 && sourceCreditability > maxCreditability) {
-            selectedSource = source;
-            maxCreditability = sourceCreditability;
+      if (!this.sources.containsKey(step)) {
+         return Collections.emptyList();
+      }
+
+      return Collections.unmodifiableList(this.sources.get(step));
+   }
+
+   private void _setCreditability(PlanStep step, KnowledgeSource ks, int creditability)
+   {
+      Map<KnowledgeSource, Integer> creditabilitiesForStep = this.creditabilities.get(step);
+      if (creditabilitiesForStep == null) {
+         creditabilitiesForStep = new HashMap<KnowledgeSource, Integer>();
+         this.creditabilities.put(step, creditabilitiesForStep);
+      }
+      creditabilitiesForStep.put(ks, creditability);
+   }
+
+   private Integer getCreditability(PlanStep step, KnowledgeSource ks)
+   {
+      Map<KnowledgeSource, Integer> creditabilitiesForStep = this.creditabilities.get(step);
+      if (creditabilitiesForStep == null) {
+         return null;
+      }
+      return creditabilitiesForStep.get(ks);
+   }
+
+   private void sortKSByCreditability(PlanStep step, List<KnowledgeSource> ksList)
+   {
+      final PlanStep _step = step;
+      Collections.sort(ksList, new Comparator<KnowledgeSource>() {
+         public int compare(KnowledgeSource ks1, KnowledgeSource ks2)
+         {
+            return getCreditability(_step, ks2).compareTo(getCreditability(_step, ks1));
          }
-      }
-
-      return selectedSource;
-   }
-
-   private int creditabilityForSource(PlanStep step, KnowledgeSource source)
-   {
-      Validate.notNull(step);
-      Validate.notNull(source);
-
-      Map<KnowledgeSource, Integer> stepCreditabilities = this.creditabilities.get(step);
-      if (stepCreditabilities == null) return -1;
-
-      Integer creditability = stepCreditabilities.get(source);
-      return (creditability != null ? creditability : -1);
+      });
    }
 }

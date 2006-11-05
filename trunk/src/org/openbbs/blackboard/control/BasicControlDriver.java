@@ -1,4 +1,4 @@
-package org.openbbs.blackboard;
+package org.openbbs.blackboard.control;
 
 import java.util.ArrayList;
 import java.util.Collections;
