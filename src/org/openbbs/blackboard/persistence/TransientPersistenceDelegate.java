@@ -12,9 +12,9 @@ import org.openbbs.blackboard.Zone;
  */
 public class TransientPersistenceDelegate implements PersistenceDelegate
 {
-   public void deleteEntry(Blackboard blackboard, Zone zone, Object entry) {
+   public void storeEntry(Blackboard blackboard, Zone zone, Object entry) {
    }
 
-   public void storeEntry(Blackboard blackboard, Zone zone, Object entry) {
+   public void removeEntry(Blackboard blackboard, Zone zone, Object entry) {
    }
 }

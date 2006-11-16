@@ -24,7 +24,7 @@ import org.openbbs.blackboard.filter.EqualObjectFilter;
 /**
  * @author stefan
  */
-public class BlackboardZonesTest extends MockObjectTestCase
+public class ObjectBlackboardZonesTest extends MockObjectTestCase
 {
    private final Zone zone1 = new NamedZone("ZONE_1");
    private final Zone zone2 = new NamedZone("ZONE_2");
@@ -32,7 +32,7 @@ public class BlackboardZonesTest extends MockObjectTestCase
    private final ZoneSelector zone2Selector;
    private Blackboard bb = null;
 
-   public BlackboardZonesTest()
+   public ObjectBlackboardZonesTest()
    {
       this.zone1Selector = new ExactZoneSelector(zone1);
       this.zone2Selector = new ExactZoneSelector(zone2);

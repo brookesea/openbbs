@@ -5,12 +5,14 @@
  */
 package org.openbbs.blackboard;
 
+import java.io.Serializable;
+
 /**
  * Identifies a zone on a Blackboard.
  *
  * @author stefan
  */
-public interface Zone
+public interface Zone extends Serializable
 {
    public static final Zone DEFAULT = new DefaultZone();
 

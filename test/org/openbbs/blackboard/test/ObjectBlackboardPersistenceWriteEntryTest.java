@@ -5,13 +5,15 @@ import org.jmock.MockObjectTestCase;
 import org.openbbs.blackboard.Blackboard;
 import org.openbbs.blackboard.BlackboardZoneException;
 import org.openbbs.blackboard.CloneBySerializationStrategy;
+import org.openbbs.blackboard.ExactZoneSelector;
 import org.openbbs.blackboard.NamedZone;
 import org.openbbs.blackboard.ObjectBlackboard;
 import org.openbbs.blackboard.WriteBlackboardException;
 import org.openbbs.blackboard.Zone;
+import org.openbbs.blackboard.filter.EqualObjectFilter;
 import org.openbbs.blackboard.persistence.PersistenceDelegate;
 
-public class BlackboardPersistenceDelegateInteractionTest extends MockObjectTestCase
+public class ObjectBlackboardPersistenceWriteEntryTest extends MockObjectTestCase
 {
    private final Zone zone = new NamedZone("TEST_ZONE");
    private final String entry = "Blackboard Entry";
@@ -26,17 +28,13 @@ public class BlackboardPersistenceDelegateInteractionTest extends MockObjectTest
       ((ObjectBlackboard)this.bb).setPersistenceDelegate((PersistenceDelegate)pdMock.proxy());
    }
 
-   protected void tearDown() throws Exception {
-      this.bb.closeZone(this.zone);
-   }
-
    public void test_storeEntry_is_called_when_a_new_entry_is_written_to_blackboard() {
       this.pdMock.expects(once()).method("storeEntry").with(same(this.bb), same(this.zone), eq(this.entry));
       this.bb.write(zone, entry);
       this.pdMock.verify();
    }
 
-   public void test_storeEntry_is_NOT_called_when_the_zone_is_unknown() {
+   public void test_storeEntry_is_not_called_when_the_zone_is_unknown() {
       this.pdMock.expects(never()).method("storeEntry").withAnyArguments();
       try {
          this.bb.write(new NamedZone("DOES_NOT_EXIST"), entry);
@@ -46,8 +44,8 @@ public class BlackboardPersistenceDelegateInteractionTest extends MockObjectTest
       }
       this.pdMock.verify();
    }
-   
-   public void test_storeEntry_is_NOT_called_for_duplicate_entries() {
+
+   public void test_storeEntry_is_not_called_for_duplicate_entries() {
       this.pdMock.expects(once()).method("storeEntry").with(same(this.bb), same(this.zone), eq(this.entry));
       this.bb.write(this.zone, this.entry);
       try {
@@ -56,5 +54,31 @@ public class BlackboardPersistenceDelegateInteractionTest extends MockObjectTest
       catch (WriteBlackboardException _) {
          // expected because entry is duplicate
       }
+      this.pdMock.verify();
+   }
+
+   public void test_storeEntry_is_not_called_if_entry_is_not_serializable() {
+      this.pdMock.expects(never()).method("storeEntry").withAnyArguments();
+      Object notSerializableEntry = new Object();
+      try {
+         this.bb.write(this.zone, notSerializableEntry);
+      }
+      catch (IllegalArgumentException _) {
+         // expected because entry is not serializable
+      }
+      this.pdMock.verify();
+   }
+
+   public void test_entry_is_not_written_to_blackboard_if_storeEntry_fails() {
+      this.pdMock.expects(once()).method("storeEntry").withAnyArguments().will(
+            throwException(new RuntimeException("storeEntry failed")));
+      try {
+         this.bb.write(this.zone, this.entry);
+      }
+      catch (RuntimeException _) {
+         // thrown by storeEntry
+      }
+      this.pdMock.verify();
+      assertFalse(this.bb.exists(new ExactZoneSelector(this.zone), new EqualObjectFilter(this.entry)));
    }
 }
