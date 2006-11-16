@@ -34,5 +34,5 @@ public interface PersistenceDelegate
     * @param zone        the zone the entry did belong to.
     * @param entry       the entry itself.
     */
-   public void deleteEntry(Blackboard blackboard, Zone zone, Object entry);
+   public void removeEntry(Blackboard blackboard, Zone zone, Object entry);
 }

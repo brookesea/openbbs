@@ -9,13 +9,16 @@ public class AllTests
    {
       TestSuite suite = new TestSuite("Test for org.openbbs.blackboard.test");
       suite.addTestSuite(ReadEntryFromBlackboardTest.class);
-      suite.addTestSuite(BlackboardZonesTest.class);
+      suite.addTestSuite(ObjectBlackboardZonesTest.class);
       suite.addTestSuite(ControlControlPlanInteractionTest.class);
       suite.addTestSuite(WriteEntryToObjectBlackboardTest.class);
       suite.addTestSuite(ControlKnowledgeSourceInteractionTest.class);
       suite.addTestSuite(CreditabilityBasedStrategyTest.class);
       suite.addTestSuite(CloneByMethodStrategyTest.class);
       suite.addTestSuite(TakeEntryFromBlackboardTest.class);
+      suite.addTestSuite(ObjectBlackboardPersistenceTakeEntryTest.class);
+      suite.addTestSuite(ObjectBlackboardPersistenceWriteEntryTest.class);
+      suite.addTestSuite(ObjectBlackboardPersistenceCloseZoneTest.class);
       return suite;
    }
 }

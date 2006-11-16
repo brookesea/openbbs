@@ -80,15 +80,23 @@ public class ObjectBlackboard implements Blackboard
          throw new WriteBlackboardException("entry " + entry.toString() + " is already present on this blackboard");
       }
 
-      this.persistenceDelegate.storeEntry(this, zone, entry);
-
       Object clonedEntry = this.cloneStrategy.clone(entry);
+
       this.entries.put(clonedEntry, zone);
+      try {
+         this.persistenceDelegate.storeEntry(this, zone, entry);
+      }
+      catch (RuntimeException exc) {
+         this.entries.remove(clonedEntry);
+         throw exc;
+      }
 
       this.notifyEntryAdded(zone, clonedEntry);
    }
 
    public Zone zoneOf(Object entry) {
+      Validate.notNull(entry, "cannot determine zone of null entry");
+      
       Zone zone = this.entries.get(entry);
       if (zone == null) throw new ReadBlackboardException("unknown entry " + entry.toString());
 
@@ -137,8 +145,9 @@ public class ObjectBlackboard implements Blackboard
             break;
          }
       }
-
-      if (takenEntry == null) throw new ReadBlackboardException("no entry selected");
+      if (takenEntry == null) {
+         throw new ReadBlackboardException("no entry selected");
+      }
 
       this.remove(takenEntry);
       return takenEntry;
@@ -151,8 +160,17 @@ public class ObjectBlackboard implements Blackboard
    }
 
    private void remove(Object entry) {
-      Validate.notNull(entry);
+      Validate.notNull(entry, "cannot remove null entry");
+      
       Zone zone = this.entries.remove(entry);
+      try {
+         this.persistenceDelegate.removeEntry(this, zone, entry);
+      }
+      catch (RuntimeException exc) {
+         this.entries.put(entry, zone);
+         throw exc;
+      }
+
       this.notifyEntryRemoved(zone, entry);
    }
 
