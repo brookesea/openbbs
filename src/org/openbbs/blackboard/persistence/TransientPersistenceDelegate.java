@@ -17,4 +17,7 @@ public class TransientPersistenceDelegate implements PersistenceDelegate
 
    public void removeEntry(Blackboard blackboard, Zone zone, Object entry) {
    }
+
+   public void restoreEntries(PlaybackDelegate playbackDelegate) {
+   }
 }

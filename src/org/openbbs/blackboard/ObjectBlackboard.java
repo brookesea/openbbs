@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.openbbs.blackboard.persistence.PersistenceDelegate;
+import org.openbbs.blackboard.persistence.PlaybackDelegate;
 import org.openbbs.blackboard.persistence.TransientPersistenceDelegate;
 
 /**
@@ -45,6 +46,29 @@ public class ObjectBlackboard implements Blackboard
    public void setPersistenceDelegate(PersistenceDelegate persistenceDelegate) {
       Validate.notNull(persistenceDelegate);
       this.persistenceDelegate = persistenceDelegate;
+   }
+
+   /**
+    * Erase the blackboard and restore the entries from the PersistenceDelegate.
+    * Observers will not be notified. If this method fails, the state of the
+    * blackboard is undefined.
+    */
+   public void restore() {
+      this.knownZones.clear();
+      this.entries.clear();
+
+      this.persistenceDelegate.restoreEntries(new PlaybackDelegate() {
+         public void storeEntry(Zone zone, Object entry) {
+            entries.put(entry, zone);
+            if (!knownZones.contains(zone)) {
+               knownZones.add(zone);
+            }
+         }
+
+         public void removeEntry(Zone zone, Object entry) {
+            entries.remove(entry);
+         }
+      });
    }
 
    public synchronized void openZone(Zone zone) {
@@ -96,7 +120,7 @@ public class ObjectBlackboard implements Blackboard
 
    public Zone zoneOf(Object entry) {
       Validate.notNull(entry, "cannot determine zone of null entry");
-      
+
       Zone zone = this.entries.get(entry);
       if (zone == null) throw new ReadBlackboardException("unknown entry " + entry.toString());
 
@@ -161,7 +185,7 @@ public class ObjectBlackboard implements Blackboard
 
    private void remove(Object entry) {
       Validate.notNull(entry, "cannot remove null entry");
-      
+
       Zone zone = this.entries.remove(entry);
       try {
          this.persistenceDelegate.removeEntry(this, zone, entry);

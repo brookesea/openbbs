@@ -4,8 +4,8 @@ import org.openbbs.blackboard.Blackboard;
 import org.openbbs.blackboard.Zone;
 
 /**
- * A PersistenceDelegte is responsible for storing the data on
- * a Blackboard to an external media.
+ * A PersistenceDelegte is responsible for storing data on
+ * a Blackboard on an external media.
  * 
  * @author stefan
  */
@@ -35,4 +35,17 @@ public interface PersistenceDelegate
     * @param entry       the entry itself.
     */
    public void removeEntry(Blackboard blackboard, Zone zone, Object entry);
+
+   /**
+    * Restore entries from the external media and feed them into
+    * the specified PlaybackDelegate. Note that, dependeding on
+    * the PersistenceDelegate implementation, an entry may be stored
+    * and removed several times during the restore phase. This means
+    * that the playbackDelegate may receive subsequent messages for
+    * the same entry.
+    * 
+    * @param playbackDelegate  an object that will get the restored
+    *                          entries; not null.
+    */
+   public void restoreEntries(PlaybackDelegate playbackDelegate);
 }

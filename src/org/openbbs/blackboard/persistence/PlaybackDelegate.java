@@ -1,10 +1,10 @@
-package org.openbbs.blackboard.persistence.prevalence;
+package org.openbbs.blackboard.persistence;
 
 import org.openbbs.blackboard.Zone;
 
 /**
- * A PlaybackDelegate is used when a PrevalencePersistenceDelegate
- * restores the data from an external media.
+ * A PlaybackDelegate is used as a consumer for entries which are
+ * restored by a PersistenceDelegate.
  */
 public interface PlaybackDelegate
 {
