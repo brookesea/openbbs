@@ -53,13 +53,11 @@ public class TakeEntryFromBlackboardTest extends MockObjectTestCase
 
       Mock filter = mock(EntryFilter.class);
       filter.expects(once()).method("selects").with(eq(entry)).will(returnValue(true));
-      filter.expects(atLeastOnce()).method("selects").with(eq("Some more Data")).will(
-               returnValue(false));
 
       Object takenEntry = this.bb.take(ZoneSelector.ALL_ZONES, (EntryFilter)filter.proxy());
 
       assertEquals(entry, takenEntry);
-      assertNull(this.bb.read(ZoneSelector.ALL_ZONES, (EntryFilter)filter.proxy()));
+      assertNull(this.bb.read(ZoneSelector.ALL_ZONES, new EqualObjectFilter(entry)));
 
       filter.verify();
    }

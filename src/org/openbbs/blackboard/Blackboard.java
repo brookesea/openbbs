@@ -20,7 +20,7 @@ public interface Blackboard
 
    /**
     * Close an open zone and remove all entries in this zone from the
-    * receiver.
+    * receiver. Observers are not notified about the removal of entries.
     */
    public void closeZone(Zone zone);
 

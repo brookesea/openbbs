@@ -7,13 +7,13 @@ package org.openbbs.blackboard;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
-import org.openbbs.blackboard.persistence.PersistenceDelegate;
-import org.openbbs.blackboard.persistence.PlaybackDelegate;
-import org.openbbs.blackboard.persistence.TransientPersistenceDelegate;
+import org.openbbs.blackboard.persistence.BlackboardMemory;
+import org.openbbs.blackboard.persistence.TransientMemory;
 
 /**
  * An ObjectBlackboard holds arbritrary objects.
@@ -24,9 +24,7 @@ public class ObjectBlackboard implements Blackboard
 {
    private final Map<BlackboardObserver, ZoneSelector> observers = new HashMap<BlackboardObserver, ZoneSelector>();
    private CloneStrategy cloneStrategy;
-   private PersistenceDelegate persistenceDelegate;
-   private final Set<Zone> knownZones = new HashSet<Zone>();
-   private final Map<Object, Zone> entries = new HashMap<Object, Zone>();
+   private BlackboardMemory memory;
 
    public ObjectBlackboard() {
       this(new CloneByMethodStrategy("clone"));
@@ -34,7 +32,7 @@ public class ObjectBlackboard implements Blackboard
 
    public ObjectBlackboard(CloneStrategy cloneStrategy) {
       this.setCloneStrategy(cloneStrategy);
-      this.setPersistenceDelegate(new TransientPersistenceDelegate());
+      this.setMemory(new TransientMemory());
       this.openZone(Zone.DEFAULT);
    }
 
@@ -42,57 +40,28 @@ public class ObjectBlackboard implements Blackboard
       Validate.notNull(cloneStrategy);
       this.cloneStrategy = cloneStrategy;
    }
-
-   public void setPersistenceDelegate(PersistenceDelegate persistenceDelegate) {
-      Validate.notNull(persistenceDelegate);
-      this.persistenceDelegate = persistenceDelegate;
-   }
-
-   /**
-    * Erase the blackboard and restore the entries from the PersistenceDelegate.
-    * Observers will not be notified. If this method fails, the state of the
-    * blackboard is undefined.
-    */
-   public void restore() {
-      this.knownZones.clear();
-      this.entries.clear();
-
-      this.persistenceDelegate.restoreEntries(new PlaybackDelegate() {
-         public void storeEntry(Zone zone, Object entry) {
-            entries.put(entry, zone);
-            if (!knownZones.contains(zone)) {
-               knownZones.add(zone);
-            }
-         }
-
-         public void removeEntry(Zone zone, Object entry) {
-            entries.remove(entry);
-         }
-      });
+   
+   public void setMemory(BlackboardMemory memory) {
+      Validate.notNull(memory);
+      this.memory = memory;
    }
 
    public synchronized void openZone(Zone zone) {
       Validate.notNull(zone);
 
-      if (this.knowsZone(zone)) throw new BlackboardZoneException("zone " + zone.name() + " is already open");
-
-      this.knownZones.add(zone);
+      if (this.memory.zoneExists(zone)) {
+         throw new BlackboardZoneException("zone " + zone.name() + " is already open");
+      }
+      this.memory.createZone(zone);
    }
 
    public synchronized void closeZone(Zone zone) {
       Validate.notNull(zone);
 
-      if (!this.knowsZone(zone)) throw new BlackboardZoneException("zone " + zone.name() + " is unknown");
-
-      Set<Object> entriesToRemove = new HashSet<Object>();
-      for (Object entry : this.entries.keySet()) {
-         if (this.entries.get(entry).equals(zone)) entriesToRemove.add(entry);
+      if (!this.memory.zoneExists(zone)) {
+         throw new BlackboardZoneException("zone " + zone.name() + " is unknown");
       }
-
-      for (Object entryToRemove : entriesToRemove)
-         this.remove(entryToRemove);
-
-      this.knownZones.remove(zone);
+      this.memory.dropZone(zone);
    }
 
    public synchronized void write(Zone zone, Object entry) {
@@ -100,20 +69,12 @@ public class ObjectBlackboard implements Blackboard
 
       if (!this.knowsZone(zone)) throw new BlackboardZoneException("zone " + zone.name() + " is unknown");
 
-      if (this.entries.containsKey(entry)) {
+      if (this.memory.entryExists(entry)) {
          throw new WriteBlackboardException("entry " + entry.toString() + " is already present on this blackboard");
       }
 
       Object clonedEntry = this.cloneStrategy.clone(entry);
-
-      this.entries.put(clonedEntry, zone);
-      try {
-         this.persistenceDelegate.storeEntry(this, zone, entry);
-      }
-      catch (RuntimeException exc) {
-         this.entries.remove(clonedEntry);
-         throw exc;
-      }
+      this.memory.storeEntry(zone, clonedEntry);
 
       this.notifyEntryAdded(zone, clonedEntry);
    }
@@ -121,8 +82,10 @@ public class ObjectBlackboard implements Blackboard
    public Zone zoneOf(Object entry) {
       Validate.notNull(entry, "cannot determine zone of null entry");
 
-      Zone zone = this.entries.get(entry);
-      if (zone == null) throw new ReadBlackboardException("unknown entry " + entry.toString());
+      Zone zone = this.memory.getZone(entry);
+      if (zone == null) {
+         throw new ReadBlackboardException("unknown entry " + entry.toString());
+      }
 
       return zone;
    }
@@ -131,13 +94,12 @@ public class ObjectBlackboard implements Blackboard
       Validate.notNull(zoneSelector);
       Validate.notNull(filter);
 
-      for (Object entry : this.entries.keySet()) {
-         if (!zoneSelector.selects(this.zoneOf(entry))) continue;
-
-         if (filter.selects(entry)) return this.cloneStrategy.clone(entry);
+      Iterator<Object> it = this.memory.getEntries(zoneSelector, filter);
+      if (!it.hasNext()) {
+         return null;
       }
-
-      return null;
+      
+      return this.cloneStrategy.clone(it.next());
    }
 
    public Set<Object> readAll(ZoneSelector zoneSelector, EntryFilter filter) {
@@ -145,10 +107,8 @@ public class ObjectBlackboard implements Blackboard
       Validate.notNull(filter);
 
       Set<Object> entries = new HashSet<Object>();
-      for (Object entry : this.entries.keySet()) {
-         if (!zoneSelector.selects(this.zoneOf(entry))) continue;
-
-         if (filter.selects(entry)) entries.add(this.cloneStrategy.clone(entry));
+      for (Iterator<Object> it = this.memory.getEntries(zoneSelector, filter); it.hasNext();) {
+         entries.add(this.cloneStrategy.clone(it.next()));
       }
 
       return entries;
@@ -159,21 +119,20 @@ public class ObjectBlackboard implements Blackboard
    }
 
    public synchronized Object take(ZoneSelector zoneSelector, EntryFilter filter) {
+      Validate.notNull(zoneSelector);
       Validate.notNull(filter);
 
-      Object takenEntry = null;
-
-      for (Object entry : this.entries.keySet()) {
-         if (filter.selects(entry)) {
-            takenEntry = entry;
-            break;
-         }
-      }
-      if (takenEntry == null) {
+      Iterator<Object> it = this.memory.getEntries(zoneSelector, filter);
+      if (!it.hasNext()) {
          throw new ReadBlackboardException("no entry selected");
       }
-
-      this.remove(takenEntry);
+      
+      Object takenEntry = it.next();
+      Zone zoneOfTakenEntry = this.memory.getZone(takenEntry);
+      this.memory.removeEntry(takenEntry);
+      
+      this.notifyEntryRemoved(zoneOfTakenEntry, takenEntry);
+      
       return takenEntry;
    }
 
@@ -183,24 +142,9 @@ public class ObjectBlackboard implements Blackboard
       this.observers.put(observer, zoneSelector);
    }
 
-   private void remove(Object entry) {
-      Validate.notNull(entry, "cannot remove null entry");
-
-      Zone zone = this.entries.remove(entry);
-      try {
-         this.persistenceDelegate.removeEntry(this, zone, entry);
-      }
-      catch (RuntimeException exc) {
-         this.entries.put(entry, zone);
-         throw exc;
-      }
-
-      this.notifyEntryRemoved(zone, entry);
-   }
-
    private boolean knowsZone(Zone zone) {
       Validate.notNull(zone);
-      return this.knownZones.contains(zone);
+      return this.memory.zoneExists(zone);
    }
 
    private void notifyEntryAdded(Zone zone, Object entry) {
