@@ -16,9 +16,6 @@ public class AllTests
       suite.addTestSuite(CreditabilityBasedStrategyTest.class);
       suite.addTestSuite(CloneByMethodStrategyTest.class);
       suite.addTestSuite(TakeEntryFromBlackboardTest.class);
-      suite.addTestSuite(ObjectBlackboardPersistenceTakeEntryTest.class);
-      suite.addTestSuite(ObjectBlackboardPersistenceWriteEntryTest.class);
-      suite.addTestSuite(ObjectBlackboardPersistenceCloseZoneTest.class);
       return suite;
    }
 }

@@ -25,7 +25,6 @@ public class SpringObjectBlackboard extends ObjectBlackboard implements Initiali
     */
    public void afterPropertiesSet() throws Exception {
       if (this.initialRestore) {
-         this.restore();
       }
    }
 }

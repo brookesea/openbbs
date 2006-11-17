@@ -91,7 +91,8 @@ public class ObjectBlackboardZonesTest extends MockObjectTestCase
       this.bb.write(zone1, "Hello World");
 
       Mock selector = mock(ZoneSelector.class);
-      selector.expects(once()).method("selects").with(eq(zone1)).will(returnValue(false));
+      selector.expects(once()).method("selects").with(eq(Zone.DEFAULT)).will(returnValue(true));
+      selector.expects(once()).method("selects").with(eq(zone1)).will(returnValue(true));
 
       this.bb.read((ZoneSelector)selector.proxy(), new EqualObjectFilter("Hello World"));
 
