@@ -2,6 +2,7 @@ package org.openbbs.blackboard.persistence;
 
 import org.openbbs.blackboard.Blackboard;
 import org.openbbs.blackboard.Zone;
+import org.openbbs.blackboard.persistence.prevalence.PlaybackDelegate;
 
 /**
  * A PersistenceDelegte is responsible for storing data on

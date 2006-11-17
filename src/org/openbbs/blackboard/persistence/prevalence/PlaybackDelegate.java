@@ -1,4 +1,4 @@
-package org.openbbs.blackboard.persistence;
+package org.openbbs.blackboard.persistence.prevalence;
 
 import org.openbbs.blackboard.Zone;
 
@@ -9,5 +9,5 @@ import org.openbbs.blackboard.Zone;
 public interface PlaybackDelegate
 {
    public void storeEntry(Zone zone, Object entry);
-   public void removeEntry(Zone zone, Object entry);
+   public void removeEntry(Object entry);
 }

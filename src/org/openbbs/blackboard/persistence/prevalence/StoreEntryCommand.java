@@ -5,12 +5,11 @@ import java.io.Serializable;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.openbbs.blackboard.Zone;
-import org.openbbs.blackboard.persistence.PlaybackDelegate;
 
 class StoreEntryCommand implements PrevalenceCommand
 {
-   private Zone zone;
-   private Object entry;
+   private final Zone zone;
+   private final Object entry;
    
    public StoreEntryCommand(Zone zone, Object entry) {
       Validate.notNull(zone, "cannot store entry for null zone");
