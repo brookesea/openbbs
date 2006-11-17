@@ -9,7 +9,7 @@ import org.jmock.MockObjectTestCase;
 import org.jmock.builder.NameMatchBuilder;
 import org.openbbs.blackboard.NamedZone;
 import org.openbbs.blackboard.Zone;
-import org.openbbs.blackboard.persistence.PlaybackDelegate;
+import org.openbbs.blackboard.persistence.prevalence.PlaybackDelegate;
 import org.openbbs.blackboard.persistence.prevalence.PrevalencePersistenceDelegate;
 
 public class PrevalencePersistenceTest extends MockObjectTestCase

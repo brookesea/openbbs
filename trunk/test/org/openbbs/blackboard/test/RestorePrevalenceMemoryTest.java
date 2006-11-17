@@ -35,6 +35,7 @@ public class RestorePrevalenceMemoryTest extends TestCase
 
       this.memory = new PrevalenceMemory();
       this.memory.setLogFile(this.logFile);
+      this.memory.restore();
    }
 
    public void test_entries_and_zones_are_restored() {

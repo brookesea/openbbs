@@ -12,7 +12,6 @@ import org.apache.commons.lang.Validate;
 import org.openbbs.blackboard.Blackboard;
 import org.openbbs.blackboard.Zone;
 import org.openbbs.blackboard.persistence.PersistenceDelegate;
-import org.openbbs.blackboard.persistence.PlaybackDelegate;
 
 /**
  * A simple PersistenceDelegate implementation that is based on
@@ -72,7 +71,7 @@ public class PrevalencePersistenceDelegate implements PersistenceDelegate
     * it to the command log.
     */
    public void removeEntry(Blackboard blackboard, Zone zone, Object entry) {
-      this.writeCommand(new RemoveEntryCommand(zone, entry));
+      this.writeCommand(new RemoveEntryCommand(entry));
    }
 
    /**
