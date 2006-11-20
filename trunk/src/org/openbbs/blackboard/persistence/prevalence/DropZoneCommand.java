@@ -4,11 +4,11 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.openbbs.blackboard.Zone;
 
-class CreateZoneCommand implements PrevalenceCommand
+class DropZoneCommand implements PrevalenceCommand
 {
    private final Zone zone;
 
-   public CreateZoneCommand(Zone zone) {
+   public DropZoneCommand(Zone zone) {
       Validate.notNull(zone, "zone must not be null");
       this.zone = zone;
    }
@@ -19,6 +19,6 @@ class CreateZoneCommand implements PrevalenceCommand
 
    public void playback(PlaybackDelegate playbackDelegate) {
       Validate.notNull(playbackDelegate, "no playbackDelegate");
-      playbackDelegate.createZone(this.zone);
+      playbackDelegate.dropZone(this.zone);
    }
 }

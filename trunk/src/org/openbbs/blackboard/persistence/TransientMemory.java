@@ -35,7 +35,10 @@ public class TransientMemory implements BlackboardMemory
       if (!zones.containsKey(zone)) {
          throw new BlackboardMemoryException("zone " + zone + " does not exist");
       }
-      this.zones.remove(zone);
+
+      for (Object entry : this.zones.remove(zone)) {
+         this.entries.remove(entry);
+      }
    }
 
    public boolean zoneExists(Zone zone) {
