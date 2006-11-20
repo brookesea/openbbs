@@ -99,10 +99,12 @@ public class PrevalenceMemory implements BlackboardMemory
 
    public void createZone(Zone zone) {
       this.memory.createZone(zone);
+      this.writeCommand(new CreateZoneCommand(zone));
    }
 
    public void dropZone(Zone zone) {
       this.memory.dropZone(zone);
+      this.writeCommand(new DropZoneCommand(zone));
    }
 
    public boolean entryExists(Object entry) {
@@ -160,6 +162,14 @@ public class PrevalenceMemory implements BlackboardMemory
    
    private class RestorePlaybackDelegate implements PlaybackDelegate
    {
+      public void createZone(Zone zone) {
+         memory.createZone(zone);
+      }
+
+      public void dropZone(Zone zone) {
+         memory.dropZone(zone);
+      }
+
       public void storeEntry(Zone zone, Object entry) {
          memory.storeEntry(zone, entry);
       }
