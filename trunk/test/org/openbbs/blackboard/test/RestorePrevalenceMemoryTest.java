@@ -9,12 +9,13 @@ import org.openbbs.blackboard.NamedZone;
 import org.openbbs.blackboard.Zone;
 import org.openbbs.blackboard.filter.EqualObjectFilter;
 import org.openbbs.blackboard.persistence.prevalence.PrevalenceMemory;
+import org.openbbs.blackboard.persistence.prevalence.SimpleLogFile;
 
 import junit.framework.TestCase;
 
 public class RestorePrevalenceMemoryTest extends TestCase
 {
-   private File logFile;
+   private File outputFile;
    private PrevalenceMemory memory;
    private static final Zone zone1 = new NamedZone("ZONE_1");
    private static final Zone zone2 = new NamedZone("ZONE_2");
@@ -27,11 +28,11 @@ public class RestorePrevalenceMemoryTest extends TestCase
    private final Entry entryInRemovedZone = new Entry("Dull Entry", "");
 
    protected void setUp() throws Exception {
-      this.logFile = File.createTempFile("prevalence", ".log");
+      this.outputFile = File.createTempFile("prevalence", ".log");
 
       // fill the memory with data
       PrevalenceMemory filledMemory = new PrevalenceMemory();
-      filledMemory.setLogFile(this.logFile);
+      filledMemory.setLogFile(new SimpleLogFile(this.outputFile));
 
       // create the zones first
       filledMemory.createZone(zone1);
@@ -57,7 +58,7 @@ public class RestorePrevalenceMemoryTest extends TestCase
       filledMemory.storeEntry(zone2, entry3Changed);
 
       this.memory = new PrevalenceMemory();
-      this.memory.setLogFile(this.logFile);
+      this.memory.setLogFile(new SimpleLogFile(this.outputFile));
       this.memory.restore();
    }
 
