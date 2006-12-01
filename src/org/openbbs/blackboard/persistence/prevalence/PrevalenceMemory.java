@@ -17,7 +17,7 @@ import org.openbbs.blackboard.persistence.TransientMemory;
  */
 public class PrevalenceMemory implements BlackboardMemory
 {
-   private final TransientMemory memory = new TransientMemory();
+   private TransientMemory memory = new TransientMemory();
    private LogFile logFile;
 
    /**
@@ -59,39 +59,70 @@ public class PrevalenceMemory implements BlackboardMemory
          }
       });
    }
+   
+   /**
+    * Store a snapshot of the memory's current state and
+    * reset the logfile.
+    */
+   public void snapshot() {
+   }
 
+   /**
+    * @see BlackboardMemory#createZone(Zone)
+    */
    public void createZone(Zone zone) {
       this.memory.createZone(zone);
       this.logFile.writeCommand(new CreateZoneCommand(zone));
    }
 
+   /**
+    * @see BlackboardMemory#dropZone(Zone)
+    */
    public void dropZone(Zone zone) {
       this.memory.dropZone(zone);
       this.logFile.writeCommand(new DropZoneCommand(zone));
    }
 
+   /**
+    * @see BlackboardMemory#entryExists(Object)
+    */
    public boolean entryExists(Object entry) {
       return this.memory.entryExists(entry);
    }
 
+   /**
+    * @see BlackboardMemory#getEntries(ZoneSelector, EntryFilter)
+    */
    public Iterator<Object> getEntries(ZoneSelector zoneSelector, EntryFilter entryFilter) {
       return this.memory.getEntries(zoneSelector, entryFilter);
    }
 
+   /**
+    * @see BlackboardMemory#getZone(Object)
+    */
    public Zone getZone(Object entry) {
       return this.memory.getZone(entry);
    }
 
+   /**
+    * @see BlackboardMemory#removeEntry(Object)
+    */
    public void removeEntry(Object entry) {
       this.memory.removeEntry(entry);
       this.logFile.writeCommand(new RemoveEntryCommand(entry));
    }
 
+   /**
+    * @see BlackboardMemory#storeEntry(Zone, Object)
+    */
    public void storeEntry(Zone zone, Object entry) {
       this.memory.storeEntry(zone, entry);
       this.logFile.writeCommand(new StoreEntryCommand(zone, entry));
    }
 
+   /**
+    * @see BlackboardMemory#zoneExists(Zone)
+    */
    public boolean zoneExists(Zone zone) {
       return this.memory.zoneExists(zone);
    }
