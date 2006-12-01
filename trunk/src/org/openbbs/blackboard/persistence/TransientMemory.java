@@ -1,5 +1,6 @@
 package org.openbbs.blackboard.persistence;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,7 +16,7 @@ import org.openbbs.blackboard.ZoneSelector;
  * A transient BlackboardMemory implementation. All entries are
  * kept in main memory.
  */
-public class TransientMemory implements BlackboardMemory
+public class TransientMemory implements BlackboardMemory, Serializable
 {
    private Map<Zone, Set<Object>> zones = new HashMap<Zone, Set<Object>>();
    private Map<Object, Zone> entries = new HashMap<Object, Zone>();
