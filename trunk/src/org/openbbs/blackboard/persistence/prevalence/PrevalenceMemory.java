@@ -8,6 +8,7 @@ import org.openbbs.blackboard.Zone;
 import org.openbbs.blackboard.ZoneSelector;
 import org.openbbs.blackboard.persistence.BlackboardMemory;
 import org.openbbs.blackboard.persistence.TransientMemory;
+import org.openbbs.blackboard.persistence.snapshot.Snapshotter;
 
 /**
  * A Blackboard memory implementation that is based on object prevalence.
@@ -18,7 +19,18 @@ import org.openbbs.blackboard.persistence.TransientMemory;
 public class PrevalenceMemory implements BlackboardMemory
 {
    private TransientMemory memory = new TransientMemory();
+   private Snapshotter snapshotter = null;
    private LogFile logFile;
+   
+   /**
+    * Create a new PrevalenceMemory. You have to set at least a
+    * logFile before entries can be stored in a memory. If you
+    * want support for memory snapshots, you have set a Snapshotter
+    * too.
+    */
+   public PrevalenceMemory() {
+      return;
+   }
 
    /**
     * The logfile is the place where changes to the memory are logged.
@@ -32,14 +44,29 @@ public class PrevalenceMemory implements BlackboardMemory
 
       this.logFile = logFile;
    }
+   
+   /**
+    * Set the Snapshotter to be used to create snapshots of this
+    * memory.
+    */
+   public void setSnapshotter(Snapshotter snapshotter) {
+      this.snapshotter = snapshotter;
+   }
 
    /**
-    * Restore the contents of this memory from the logfile. The
-    * entire memory is deleted first. If this method fails, the
+    * Restore the contents of this memory from the logfile. If a snapshotter
+    * is set, the memory is restored from the latest snapshot before the logfile
+    * is replayed. The entire memory is deleted first. If this method fails, the
     * state of the memory is undefined.
     */
    public void restore() {
       Validate.notNull(this.logFile, "logFile is not set");
+      
+      this.memory.clear();
+      
+      if (this.snapshotter != null) {
+         this.snapshotter.restoreFromSnapshot(this.memory);
+      }
 
       this.logFile.playback(new PlaybackDelegate() {
          public void createZone(Zone zone) {
@@ -61,10 +88,17 @@ public class PrevalenceMemory implements BlackboardMemory
    }
    
    /**
-    * Store a snapshot of the memory's current state and
-    * reset the logfile.
+    * Store a snapshot of the memory's current state and reset the
+    * logfile. The Snapshotter property must be set in order for
+    * this method to work.
     */
    public void snapshot() {
+      if (this.snapshotter == null) {
+         throw new IllegalStateException("no Snapshotter defined for this memory");
+      }
+      
+      this.snapshotter.takeSnapshot(this.memory);
+      this.logFile.reset();
    }
 
    /**

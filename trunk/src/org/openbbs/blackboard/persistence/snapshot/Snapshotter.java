@@ -1,16 +1,14 @@
 package org.openbbs.blackboard.persistence.snapshot;
 
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Iterator;
 
 import org.apache.commons.lang.Validate;
 import org.openbbs.blackboard.Zone;
+import org.openbbs.util.ObjectReader;
 
 /**
  * A Snapshotter takes a Snapshottable BlackboardMemory and dumps
@@ -21,10 +19,19 @@ public class Snapshotter
    private File snapshotFile;
 
    /**
-    * Create a new Snapshotter.
+    * Create a new Snapshotter. You have to set the snapshotFile before
+    * you can take snapshots or restore SnapshottableMemories from a
+    * snapshot.
     */
    public Snapshotter() {
       return;
+   }
+
+   /**
+    * Create a new Snapshotter and set the snapshotFile.
+    */
+   public Snapshotter(File snapshotFile) {
+      this.setSnapshotFile(snapshotFile);
    }
 
    /**
@@ -44,6 +51,8 @@ public class Snapshotter
     * @param memory  a non-null SnapshottableMemory
     */
    public void takeSnapshot(SnapshottableMemory memory) {
+      Validate.notNull(this.snapshotFile, "snapshot file not set");
+
       try {
          this.basicTakeSnapshot(memory);
       }
@@ -56,11 +65,18 @@ public class Snapshotter
     * Restore the contents of {@link SnapshottleMemory} from a snapshot
     * file. It is up to the memory to clear its contents before or to
     * handle conflicts otherwise. The memory must not be modified while
-    * its contents are restored.
+    * its contents are restored. Does nothing if the snapshotFile does
+    * not exist or is emtpy, this method 
     * 
     * @param memory  a non-null SnapshottableMemory
     */
    public void restoreFromSnapshot(SnapshottableMemory memory) {
+      Validate.notNull(this.snapshotFile, "snapshotFile not set");
+
+      if (!this.snapshotFile.exists()) {
+         return;
+      }
+
       try {
          this.basicRestoreFromSnapshot(memory);
       }
@@ -97,31 +113,25 @@ public class Snapshotter
       Validate.notNull(memory, "memory is null");
       Validate.notNull(this.snapshotFile, "snapshotFile is not set");
 
-      ObjectInputStream istream = new ObjectInputStream(new FileInputStream(this.snapshotFile));
-      try {
-         boolean eof = false;
+      final SnapshottableMemory _memory = memory;
+      new ObjectReader(this.snapshotFile).readObjects(new ObjectReader.Delegate() {
          Zone currentlyRestoredZone = null;
-         while (!eof) {
-            try {
-               Object nextObject = istream.readObject();
-               if (SnapshotMarker.NEW_ZONE.equals(nextObject)) {
-                  Object newZone = istream.readObject();
-                  Validate.isTrue(newZone instanceof Zone, newZone + " is not a Zone but should be");
-                  memory.restoreZone((Zone)newZone);
-                  currentlyRestoredZone = (Zone)newZone;
-               }
-               else {
-                  Validate.notNull(currentlyRestoredZone, "entry " + nextObject + " found outside a zone");
-                  memory.restoreEntry(nextObject, currentlyRestoredZone);
-               }
+
+         public void didReadObject(Object object) throws Exception {
+            if (SnapshotMarker.NEW_ZONE.equals(object)) {
+               // force the next object to be a zone
+               this.currentlyRestoredZone = null;
             }
-            catch (EOFException _) {
-               eof = true;
+            else if (currentlyRestoredZone == null) {
+               Validate.isTrue(object instanceof Zone, object + " is not a Zone but should be");
+               _memory.restoreZone((Zone)object);
+               this.currentlyRestoredZone = (Zone)object;
+            }
+            else {
+               Validate.notNull(this.currentlyRestoredZone, "entry " + object + " found outside a zone");
+               _memory.restoreEntry(object, this.currentlyRestoredZone);
             }
          }
-      }
-      finally {
-         istream.close();
-      }
+      });
    }
 }
