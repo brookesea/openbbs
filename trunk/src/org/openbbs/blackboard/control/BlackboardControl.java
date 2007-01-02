@@ -28,41 +28,45 @@ public class BlackboardControl
    private Zone zone;
    private ControlPlan plan = null;
    private KSSelectionStrategy ksSelectionStrategy = null;
+   private List<KnowledgeSource> transformations = null;
    private ControlDriver driver = null;
    private boolean isRunning = false;
+   private boolean closeZoneOnTerminate = false;
    private List<BlackboardControlListener> listeners = new ArrayList<BlackboardControlListener>();
-   
-   public BlackboardControl()
-   {
+
+   public BlackboardControl() {
       return;
    }
 
-   public void setBlackboard(Blackboard blackboard)
-   {
+   public void setBlackboard(Blackboard blackboard) {
       Validate.notNull(blackboard);
       this.blackboard = blackboard;
    }
-   
-   public void setZone(Zone zone)
-   {
+
+   public void setZone(Zone zone) {
       Validate.notNull(zone);
       this.zone = zone;
    }
    
-   public void setPlan(ControlPlan plan)
-   {
+   public void setCloseZoneOnTerminate(boolean removeZoneOnTerminate) {
+      this.closeZoneOnTerminate = removeZoneOnTerminate;
+   }
+
+   public void setPlan(ControlPlan plan) {
       Validate.notNull(plan);
       this.plan = plan;
    }
-   
-   public void setKSSelectStrategy(KSSelectionStrategy ksSelectionStrategy)
-   {
+
+   public void setKSSelectStrategy(KSSelectionStrategy ksSelectionStrategy) {
       Validate.notNull(ksSelectionStrategy);
       this.ksSelectionStrategy = ksSelectionStrategy;
    }
    
-   public void setDriver(ControlDriver driver)
-   {
+   public void setTransformations(List<KnowledgeSource> transformations) {
+      this.transformations = null;
+   }
+
+   public void setDriver(ControlDriver driver) {
       if (this.driver != null) this.driver.detachControl(this);
 
       this.driver = null;
@@ -70,32 +74,31 @@ public class BlackboardControl
       this.driver = driver;
    }
 
-   public void registerListener(BlackboardControlListener listener)
-   {
+   public void registerListener(BlackboardControlListener listener) {
       Validate.notNull(listener);
       if (!this.listeners.contains(listener)) this.listeners.add(listener);
    }
 
-   public void removeListener(BlackboardControlListener listener)
-   {
+   public void removeListener(BlackboardControlListener listener) {
       Validate.notNull(listener);
       this.listeners.remove(listener);
    }
 
-   public boolean nextRun()
-   {
+   public boolean nextRun() {
       Validate.isTrue(!this.isRunning, "reentrant run loop detected!");
 
       this.isRunning = true;
 
       boolean continueRunLoop = false;
       try {
+         KSExecutionContext executionContext = this.createKSExecutionContext();
+
+         this.runApplicableTransformations(executionContext);
+
          List<PlanStep> steps = this.plan.getPossibleSteps();
          Validate.notEmpty(steps, "plan did not return any step");
          this.notifyListenersPossibleStepsSelected(steps);
 
-         KSExecutionContext executionContext = this.createKSExecutionContext();
-         
          KnowledgeSource selectedSource = this.selectNextSource(steps, executionContext);
          if (selectedSource != null) {
             continueRunLoop = true;
@@ -106,19 +109,20 @@ public class BlackboardControl
          // terminate this control?
          for (PlanStep step : steps) {
             if (step.terminates()) {
-               this.driver.detachControl(this);
                continueRunLoop = false;
+               this.terminate();
+               break;
             }
          }
-      } finally {
+      }
+      finally {
          this.isRunning = false;
       }
 
       return continueRunLoop;
    }
 
-   private KnowledgeSource selectNextSource(List<PlanStep> steps, KSExecutionContext executionContext)
-   {
+   private KnowledgeSource selectNextSource(List<PlanStep> steps, KSExecutionContext executionContext) {
       for (PlanStep step : steps) {
          Collection<KnowledgeSource> sourcesForStep = this.ksSelectionStrategy.getKnowledgeSources(step);
 
@@ -134,20 +138,38 @@ public class BlackboardControl
       return null;
    }
    
-   private KSExecutionContext createKSExecutionContext()
-   {
-      return new KSExecutionContextImpl(this.blackboard, this.zone);
+   private void runApplicableTransformations(KSExecutionContext executionContext) {
+      if (this.transformations == null || this.transformations.isEmpty()) {
+         return;
+      }
+      
+      for (KnowledgeSource transformation : this.transformations) {
+         if (transformation.isEnabled(executionContext)) {
+            transformation.execute(executionContext);
+         }
+      }
+   }
+   
+   private void terminate() {
+      this.driver.detachControl(this);
+      this.driver = null;
+
+      if (this.closeZoneOnTerminate) {
+         this.blackboard.closeZone(zone);
+      }
    }
 
-   private void notifyListenersPossibleStepsSelected(List<PlanStep> steps)
-   {
+   private KSExecutionContext createKSExecutionContext() {
+      return new KSExecutionContextImpl(this.blackboard, this.zone);
+   }
+   
+   private void notifyListenersPossibleStepsSelected(List<PlanStep> steps) {
       steps = Collections.unmodifiableList(steps);
       for (BlackboardControlListener listener : this.listeners)
          listener.didSelectPossibleSteps(this, steps);
    }
 
-   private void notifyListenersSourceSelected(KnowledgeSource selectedSource)
-   {
+   private void notifyListenersSourceSelected(KnowledgeSource selectedSource) {
       for (BlackboardControlListener listener : listeners)
          listener.didSelectNextSource(this, selectedSource);
    }
