@@ -28,6 +28,13 @@ public interface LogFile
    public void writeCommand(PrevalenceCommand command);
    
    /**
+    * Remove previously stored commands from the LogFile. The logfile
+    * must not be modified before this method returns. The caller is
+    * responsbible for ensuring this.
+    */
+   public void reset();
+   
+   /**
     * Close this LogFile. Commands which are not persisted yet must be
     * written. Allocated resources have to be freed. The LogFile
     * can still receive writeCommand messages after it has been closed
@@ -37,7 +44,7 @@ public interface LogFile
    public void closeLog();
    
    /**
-    * Test if the logfile is currently open.
+    * Test if the LogFile is currently open.
     */
    public boolean isOpen();
 }

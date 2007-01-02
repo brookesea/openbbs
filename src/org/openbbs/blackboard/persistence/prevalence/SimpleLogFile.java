@@ -1,14 +1,12 @@
 package org.openbbs.blackboard.persistence.prevalence;
 
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.apache.commons.lang.Validate;
+import org.openbbs.util.ObjectReader;
 
 /**
  * A LogFile implementation which writes all commands to a file
@@ -18,7 +16,7 @@ public class SimpleLogFile implements LogFile
 {
    private ObjectOutputStream logStream = null;
    private File outputFile = null;
-   
+
    /**
     * Create a new LogFile and set the ouput file to the specified
     * file.
@@ -26,7 +24,7 @@ public class SimpleLogFile implements LogFile
    public SimpleLogFile(File outputFile) {
       this.setOutputFile(outputFile);
    }
-   
+
    /**
     * Create new LogFile. You have to set the outputFile before
     * the LogFile can be used.
@@ -60,18 +58,12 @@ public class SimpleLogFile implements LogFile
       }
 
       try {
-         ObjectInputStream oin = new ObjectInputStream(new FileInputStream(this.outputFile));
-         boolean eof = false;
-         while (!eof) {
-            try {
-               Object object = oin.readObject();
-               ((PrevalenceCommand)object).playback(playbackDelegate);
+         final PlaybackDelegate _playbackDelegate = playbackDelegate;
+         new ObjectReader(this.outputFile).readObjects(new ObjectReader.Delegate() {
+            public void didReadObject(Object object) throws Exception {
+               ((PrevalenceCommand)object).playback(_playbackDelegate);
             }
-            catch (EOFException _) {
-               eof = true;
-            }
-         }
-         oin.close();
+         });
       }
       catch (Exception exc) {
          throw new PrevalencePersistenceException("failed to restore entries from output file "
@@ -86,15 +78,24 @@ public class SimpleLogFile implements LogFile
       Validate.notNull(command);
 
       if (!this.isOpen()) {
-         this.log();
+         this.openLog();
       }
 
       try {
          this.logStream.writeObject(command);
+         this.logStream.flush();
       }
       catch (IOException exc) {
          throw new LogFileException("failed to write command " + command + " to " + this.outputFile, exc);
       }
+   }
+
+   /**
+    * @see LogFile#reset()
+    */
+   public void reset() {
+      this.closeLog();
+      Validate.isTrue(this.outputFile.delete(), "cannot remove log file " + this.outputFile);
    }
 
    /**
@@ -106,6 +107,7 @@ public class SimpleLogFile implements LogFile
       try {
          this.logStream.flush();
          this.logStream.close();
+         this.logStream = null;
       }
       catch (IOException exc) {
          throw new LogFileException("failed to close output file " + this.outputFile, exc);
@@ -122,14 +124,34 @@ public class SimpleLogFile implements LogFile
    /**
     * Open the file for writing.
     */
-   private void log() {
+   private void openLog() {
       Validate.isTrue(!this.isOpen(), "command stream is already open");
       Validate.notNull(this.outputFile, "outputFile is not set");
 
       try {
-         this.logStream = new ObjectOutputStream(new FileOutputStream(this.outputFile, true));
+         // Appending to an ObjectOutputStream is NOT possible. If the output
+         // file exists, we have to copy all objects stored in this file to the
+         // new stream.
+         File oldOutputFile = null;
+         if (this.outputFile.exists()) {
+            oldOutputFile = new File(this.outputFile.getAbsolutePath() + "_old");
+            Validate.isTrue(this.outputFile.renameTo(oldOutputFile), "cannot rename" + this.outputFile
+                  + " to " + oldOutputFile);
+         }
+
+         this.logStream = new ObjectOutputStream(new FileOutputStream(this.outputFile, false));
+
+         if (oldOutputFile != null) {
+            new ObjectReader(oldOutputFile).readObjects(new ObjectReader.Delegate() {
+               public void didReadObject(Object object) throws Exception {
+                  logStream.writeObject(object);
+               }
+            });
+            oldOutputFile.delete();
+         }
       }
-      catch (IOException exc) {
+      catch (Exception exc) {
+         this.logStream = null;
          throw new LogFileException("unable to open logFile " + this.outputFile, exc);
       }
    }

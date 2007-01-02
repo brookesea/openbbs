@@ -16,6 +16,10 @@ public class AllTests
       suite.addTestSuite(CreditabilityBasedStrategyTest.class);
       suite.addTestSuite(CloneByMethodStrategyTest.class);
       suite.addTestSuite(TakeEntryFromBlackboardTest.class);
+      suite.addTestSuite(RestorePrevalenceMemoryTest.class);
+      suite.addTestSuite(SnapshotterTest.class);
+      suite.addTestSuite(ReopenSimpleLogFileTest.class);
+      suite.addTestSuite(PrevalenceIntegrationTest.class);
       return suite;
    }
 }
