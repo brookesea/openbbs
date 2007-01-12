@@ -20,6 +20,7 @@ public class AllTests
       suite.addTestSuite(SnapshotterTest.class);
       suite.addTestSuite(ReopenSimpleLogFileTest.class);
       suite.addTestSuite(PrevalenceIntegrationTest.class);
+      suite.addTestSuite(AccessLockedPrevalenceMemoryTest.class);
       return suite;
    }
 }
