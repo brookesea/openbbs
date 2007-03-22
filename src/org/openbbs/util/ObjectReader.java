@@ -3,6 +3,7 @@ package org.openbbs.util;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
@@ -22,6 +23,9 @@ public class ObjectReader
          this.inputStream = new ObjectInputStream(new FileInputStream(file));
       }
       catch (EOFException _) {
+         this.streamIsEmpty = true;
+      }
+      catch (FileNotFoundException _) {
          this.streamIsEmpty = true;
       }
    }

@@ -95,7 +95,9 @@ public class SimpleLogFile implements LogFile
     */
    public void reset() {
       this.closeLog();
-      Validate.isTrue(this.outputFile.delete(), "cannot remove log file " + this.outputFile);
+      if (this.outputFile.exists()) {
+         Validate.isTrue(this.outputFile.delete(), "cannot remove log file " + this.outputFile);
+      }
    }
 
    /**
