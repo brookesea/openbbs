@@ -15,7 +15,7 @@ public interface KSExecutionContext
     * to the zone in which the KnowledgeSource is meant to work.
     */
    public BlackboardAccess blackboard();
-   
+
    /**
     * Get access to a particular zone on the blackboard. This method
     * fails if access to the zone is prohibited in this context.

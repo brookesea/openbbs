@@ -21,108 +21,96 @@ public class DebugControlDriver extends BasicControlDriver
 {
    private Set<DebugControlDriverListener> listeners = new HashSet<DebugControlDriverListener>();
 
-   public void attachControl(BlackboardControl control)
-   {
+   public void attachControl(BlackboardControl control) {
       super.attachControl(control);
 
       final BlackboardControl _control = control;
       this.eachListener(new ListenerBlock() {
-         public void yield(DebugControlDriverListener listener)
-         {
+         public void yield(DebugControlDriverListener listener) {
             listener.controlAttached(DebugControlDriver.this, _control);
          }
       });
    }
 
-   public void detachControl(BlackboardControl control)
-   {
+   public void detachControl(BlackboardControl control) {
       super.detachControl(control);
 
       final BlackboardControl _control = control;
       this.eachListener(new ListenerBlock() {
-         public void yield(DebugControlDriverListener listener)
-         {
+         public void yield(DebugControlDriverListener listener) {
             listener.controlDetached(DebugControlDriver.this, _control);
          }
       });
    }
 
-   public void step()
-   {
+   public void step() {
       this.eachListener(new ListenerBlock() {
-         public void yield(DebugControlDriverListener listener)
-         {
+         public void yield(DebugControlDriverListener listener) {
             listener.willStepNext(DebugControlDriver.this);
          }
       });
 
       try {
          this.nextRun();
-      } catch (final Throwable exc) {
+      }
+      catch (final Throwable exc) {
          this.eachListener(new ListenerBlock() {
-            public void yield(DebugControlDriverListener listener)
-            {
+            public void yield(DebugControlDriverListener listener) {
                listener.errorHappened(DebugControlDriver.this, exc);
             }
          });
-      } finally {
+      }
+      finally {
          this.eachListener(new ListenerBlock() {
-            public void yield(DebugControlDriverListener listener)
-            {
+            public void yield(DebugControlDriverListener listener) {
                listener.didStepNext(DebugControlDriver.this);
             }
          });
       }
    }
 
-   public void run()
-   {
+   public void run() {
       this.eachListener(new ListenerBlock() {
-         public void yield(DebugControlDriverListener listener)
-         {
+         public void yield(DebugControlDriverListener listener) {
             listener.willRun(DebugControlDriver.this);
          }
       });
 
       try {
          this.runLoop();
-      } catch (final Throwable exc) {
+      }
+      catch (final Throwable exc) {
          this.eachListener(new ListenerBlock() {
-            public void yield(DebugControlDriverListener listener)
-            {
+            public void yield(DebugControlDriverListener listener) {
                listener.errorHappened(DebugControlDriver.this, exc);
             }
          });
-      } finally {
+      }
+      finally {
          this.eachListener(new ListenerBlock() {
-            public void yield(DebugControlDriverListener listener)
-            {
+            public void yield(DebugControlDriverListener listener) {
                listener.didRun(DebugControlDriver.this);
             }
          });
       }
    }
 
-   public void registerListener(DebugControlDriverListener listener)
-   {
+   public void registerListener(DebugControlDriverListener listener) {
       Validate.notNull(listener);
       this.listeners.add(listener);
    }
 
-   public void removeListener(DebugControlDriverListener listener)
-   {
+   public void removeListener(DebugControlDriverListener listener) {
       Validate.notNull(listener);
       this.listeners.remove(listener);
    }
 
-   private void eachListener(ListenerBlock block)
-   {
+   private void eachListener(ListenerBlock block) {
       Validate.notNull(block);
 
       // duplicate listener set to allow concurrent registerListener/removeListener
       // messages
-      Set<DebugControlDriverListener> _listeners = new HashSet<DebugControlDriverListener>(
-               this.listeners);
+      Set<DebugControlDriverListener> _listeners = new HashSet<DebugControlDriverListener>(this.listeners);
       for (DebugControlDriverListener listener : _listeners)
          block.yield(listener);
    }

@@ -10,7 +10,7 @@ class StoreEntryCommand implements PrevalenceCommand
 {
    private final Zone zone;
    private final Object entry;
-   
+
    public StoreEntryCommand(Zone zone, Object entry) {
       Validate.notNull(zone, "cannot store entry for null zone");
       Validate.notNull(entry, "cannot store null entry");
@@ -27,4 +27,6 @@ class StoreEntryCommand implements PrevalenceCommand
       Validate.notNull(playbackDelegate);
       playbackDelegate.storeEntry(this.zone, this.entry);
    }
+
+   private static final long serialVersionUID = 5264242562029115738L;
 }

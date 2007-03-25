@@ -10,8 +10,7 @@ package org.openbbs.blackboard;
  */
 public class AllZonesSelector implements ZoneSelector
 {
-   public boolean selects(Zone zone)
-   {
+   public boolean selects(Zone zone) {
       return true;
    }
 }

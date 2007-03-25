@@ -15,31 +15,28 @@ public class NamedZone implements Zone
 {
    private String name = null;
 
-   public NamedZone(String name)
-   {
+   public NamedZone(String name) {
       Validate.notNull(name);
       this.name = name;
    }
 
-   public String name()
-   {
+   public String name() {
       return this.name;
    }
 
-   public boolean equals(Object obj)
-   {
+   public boolean equals(Object obj) {
       if (obj == null || !(obj instanceof NamedZone)) return false;
 
       return this.name().equals(((NamedZone)obj).name());
    }
 
-   public int hashCode()
-   {
+   public int hashCode() {
       return new HashCodeBuilder().append(this.name).append(NamedZone.class).toHashCode();
    }
 
-   public String toString()
-   {
+   public String toString() {
       return "a NamedZone \"" + this.name() + "\"";
    }
+
+   private static final long serialVersionUID = 6286217725870494454L;
 }

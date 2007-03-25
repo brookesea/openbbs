@@ -16,7 +16,7 @@ public interface SnapshottableMemory
     * the emtpy ones.
     */
    public Iterator<Zone> getZonesIterator();
-   
+
    /**
     * Returns an iterator over all entries stored in a particular
     * zone inside the memory. If the zone is empty, it is both ok,
@@ -25,7 +25,7 @@ public interface SnapshottableMemory
     * @param zone  a non-null Zone.
     */
    public Iterator<Object> getEntriesInZone(Zone zone);
-   
+
    /**
     * Restore a Zone in the memory. This method is called when the
     * contents of a memory are restored from a snapshot file. The
@@ -34,7 +34,7 @@ public interface SnapshottableMemory
     * @param zone  the non-null Zone to be restored.
     */
    public void restoreZone(Zone zone);
-   
+
    /**
     * Restore an entry in a Zone. It is guaranteed that the zone has
     * been restored before.

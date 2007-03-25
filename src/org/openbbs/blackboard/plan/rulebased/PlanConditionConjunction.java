@@ -17,20 +17,17 @@ public class PlanConditionConjunction implements PlanStepCondition
 {
    private List<PlanStepCondition> conditions = new ArrayList<PlanStepCondition>();
 
-   public PlanConditionConjunction(PlanStepCondition condition)
-   {
+   public PlanConditionConjunction(PlanStepCondition condition) {
       this.and(condition);
    }
 
-   public PlanConditionConjunction and(PlanStepCondition condition)
-   {
+   public PlanConditionConjunction and(PlanStepCondition condition) {
       Validate.notNull(condition);
       this.conditions.add(condition);
       return this;
    }
 
-   public boolean evaluate()
-   {
+   public boolean evaluate() {
       for (PlanStepCondition condition : this.conditions)
          if (!condition.evaluate()) return false;
 

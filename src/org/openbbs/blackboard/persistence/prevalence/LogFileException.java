@@ -6,7 +6,7 @@ package org.openbbs.blackboard.persistence.prevalence;
  */
 public class LogFileException extends RuntimeException
 {
-  public LogFileException() {
+   public LogFileException() {
       super();
    }
 
@@ -21,4 +21,6 @@ public class LogFileException extends RuntimeException
    public LogFileException(Throwable cause) {
       super(cause);
    }
+
+   private static final long serialVersionUID = -3938208623338315763L;
 }

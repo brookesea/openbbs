@@ -7,26 +7,22 @@ public class NamedPlanStep implements PlanStep
 {
    private final String name;
    private boolean terminates = false;
-   
-   public NamedPlanStep(String name)
-   {
+
+   public NamedPlanStep(String name) {
       Validate.notNull(name);
       this.name = name;
    }
-   
-   public NamedPlanStep terminates(boolean terminates)
-   {
+
+   public NamedPlanStep terminates(boolean terminates) {
       this.terminates = terminates;
       return this;
    }
-   
-   public String getName()
-   {
+
+   public String getName() {
       return this.name;
    }
 
-   public boolean terminates()
-   {
+   public boolean terminates() {
       return this.terminates;
    }
 }

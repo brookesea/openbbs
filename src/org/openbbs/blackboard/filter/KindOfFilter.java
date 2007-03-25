@@ -13,16 +13,14 @@ import org.openbbs.blackboard.EntryFilter;
  */
 public class KindOfFilter implements EntryFilter
 {
-   private Class clazz = null;
+   private Class<? extends Object> clazz = null;
 
-   public KindOfFilter(Class clazz)
-   {
+   public KindOfFilter(Class<? extends Object> clazz) {
       Validate.notNull(clazz);
       this.clazz = clazz;
    }
 
-   public boolean selects(Object entry)
-   {
+   public boolean selects(Object entry) {
       return this.clazz.isAssignableFrom(entry.getClass());
    }
 }

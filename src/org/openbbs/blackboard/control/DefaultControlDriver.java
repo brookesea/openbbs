@@ -19,29 +19,24 @@ import org.openbbs.blackboard.ZoneSelector;
  */
 public class DefaultControlDriver extends BasicControlDriver implements BlackboardObserver
 {
-   public DefaultControlDriver()
-   {
+   public DefaultControlDriver() {
       return;
    }
 
-   public DefaultControlDriver(Blackboard blackboard)
-   {
+   public DefaultControlDriver(Blackboard blackboard) {
       this.setBlackboard(blackboard);
    }
-   
-   public void setBlackboard(Blackboard blackboard)
-   {
+
+   public void setBlackboard(Blackboard blackboard) {
       Validate.notNull(blackboard);
       blackboard.registerInterest(ZoneSelector.ALL_ZONES, this);
    }
 
-   public void blackboardDidAddEntry(Blackboard blackboard, Zone zone, Object entry)
-   {
+   public void blackboardDidAddEntry(Blackboard blackboard, Zone zone, Object entry) {
       if (!this.isRunning()) this.runLoop();
    }
 
-   public void blackboardDidRemoveEntry(Blackboard blackboard, Zone zone, Object entry)
-   {
+   public void blackboardDidRemoveEntry(Blackboard blackboard, Zone zone, Object entry) {
       if (!this.isRunning()) this.runLoop();
    }
 }

@@ -66,8 +66,7 @@ public class SimpleLogFile implements LogFile
          });
       }
       catch (Exception exc) {
-         throw new PrevalencePersistenceException("failed to restore entries from output file "
-               + this.outputFile, exc);
+         throw new PrevalencePersistenceException("failed to restore entries from output file " + this.outputFile, exc);
       }
    }
 
@@ -137,8 +136,8 @@ public class SimpleLogFile implements LogFile
          File oldOutputFile = null;
          if (this.outputFile.exists()) {
             oldOutputFile = new File(this.outputFile.getAbsolutePath() + "_old");
-            Validate.isTrue(this.outputFile.renameTo(oldOutputFile), "cannot rename" + this.outputFile
-                  + " to " + oldOutputFile);
+            Validate.isTrue(this.outputFile.renameTo(oldOutputFile), "cannot rename" + this.outputFile + " to "
+                     + oldOutputFile);
          }
 
          this.logStream = new ObjectOutputStream(new FileOutputStream(this.outputFile, false));

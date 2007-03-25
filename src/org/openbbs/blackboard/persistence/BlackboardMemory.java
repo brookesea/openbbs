@@ -26,7 +26,7 @@ public interface BlackboardMemory
     *              may restrict the possible Zone implementations.
     */
    public void createZone(Zone zone);
-   
+
    /**
     * Remove an existing zone from the memory. All entries
     * in this zone are also removed.
@@ -34,14 +34,14 @@ public interface BlackboardMemory
     * @param zone  a non-null, existing Zone.
     */
    public void dropZone(Zone zone);
-   
+
    /**
     * Check wether a particular zone exists in the memory.
     * 
     * @param zone  a non-null Zone.
     */
    public boolean zoneExists(Zone zone);
-   
+
    /**
     * Store a new entry inside a zone of the memory. No entry
     * which is equal to the specified entry must exist in any
@@ -55,7 +55,7 @@ public interface BlackboardMemory
     *               an entry must be Serializable. Not null.
     */
    public void storeEntry(Zone zone, Object entry);
-   
+
    /**
     * Remove an entry from the memory. An entry which is equal to
     * the specified entry must exist and will be removed.
@@ -63,14 +63,14 @@ public interface BlackboardMemory
     * @param entry  the entry to be removed.
     */
    public void removeEntry(Object entry);
-   
+
    /**
     * Check whether a given entry exists in the memory.
     * 
     * @param entry  a non-null entry.
     */
    public boolean entryExists(Object entry);
-   
+
    /**
     * Get the zone in which a particular entry is stored. Returns
     * null if the entry is not stored in this memory.
@@ -78,7 +78,7 @@ public interface BlackboardMemory
     * @param entry  a non-null entry.
     */
    public Zone getZone(Object entry);
-   
+
    /**
     * Get an Iterator over all entries in the memory which reside
     * in a zone that is machted by the specified {@link ZoneSelector}

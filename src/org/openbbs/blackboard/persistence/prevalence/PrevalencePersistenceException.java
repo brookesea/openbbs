@@ -1,7 +1,7 @@
 package org.openbbs.blackboard.persistence.prevalence;
 
 /**
- * Thrown by a PrevalencePersistenceDelegate when errors happen.
+ * Throw my a PrevalenceMemory when errors happen.
  */
 public class PrevalencePersistenceException extends RuntimeException
 {
@@ -20,4 +20,6 @@ public class PrevalencePersistenceException extends RuntimeException
    public PrevalencePersistenceException(Throwable cause) {
       super(cause);
    }
+
+   private static final long serialVersionUID = 2475719910146355085L;
 }

@@ -16,7 +16,7 @@ public interface LogFile
     *                          passed to each command.
     */
    public void playback(PlaybackDelegate playbackDelegate);
-   
+
    /**
     * Write a command to the LogFile. It is important that the command
     * is appended at the end of the file. If the LogFile is not open,
@@ -26,14 +26,14 @@ public interface LogFile
     * @param command  the command to be stored in the LogFile; not null.
     */
    public void writeCommand(PrevalenceCommand command);
-   
+
    /**
     * Remove previously stored commands from the LogFile. The logfile
     * must not be modified before this method returns. The caller is
     * responsbible for ensuring this.
     */
    public void reset();
-   
+
    /**
     * Close this LogFile. Commands which are not persisted yet must be
     * written. Allocated resources have to be freed. The LogFile
@@ -42,7 +42,7 @@ public interface LogFile
     * already closed this method does nothing.
     */
    public void closeLog();
-   
+
    /**
     * Test if the LogFile is currently open.
     */

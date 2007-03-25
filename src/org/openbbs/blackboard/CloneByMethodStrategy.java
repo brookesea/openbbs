@@ -19,28 +19,29 @@ public class CloneByMethodStrategy implements CloneStrategy
 {
    private String cloneMessage = null;
 
-   public CloneByMethodStrategy(String cloneMessage)
-   {
+   public CloneByMethodStrategy(String cloneMessage) {
       Validate.notNull(cloneMessage);
       this.cloneMessage = cloneMessage;
    }
 
-   public Object clone(Object obj)
-   {
+   public Object clone(Object obj) {
       if (obj == null) return null;
 
       try {
          Method m = obj.getClass().getMethod(this.cloneMessage);
          return m.invoke(obj);
-      } catch (NoSuchMethodException exc) {
-         throw new UnsupportedOperationException("object " + obj + " does not respond to "
-                  + this.cloneMessage + " message", exc);
-      } catch (InvocationTargetException exc) {
-         throw new RuntimeException("error while sending " + this.cloneMessage + " message to "
-                  + obj, exc.getTargetException());
-      } catch (IllegalAccessException exc) {
-         throw new UnsupportedOperationException("not allowed to send message " + this.cloneMessage
-                  + " to object " + obj, exc);
+      }
+      catch (NoSuchMethodException exc) {
+         throw new UnsupportedOperationException("object " + obj + " does not respond to " + this.cloneMessage
+                  + " message", exc);
+      }
+      catch (InvocationTargetException exc) {
+         throw new RuntimeException("error while sending " + this.cloneMessage + " message to " + obj, exc
+                  .getTargetException());
+      }
+      catch (IllegalAccessException exc) {
+         throw new UnsupportedOperationException("not allowed to send message " + this.cloneMessage + " to object "
+                  + obj, exc);
       }
    }
 }

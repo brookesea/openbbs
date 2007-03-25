@@ -5,7 +5,6 @@
  */
 package org.openbbs.blackboard.plan;
 
-
 /**
  * @author stefan
  */
@@ -15,7 +14,7 @@ public interface PlanStep
     * Returns the name of this step.
     */
    public String getName();
-   
+
    /**
     * Returns true if the control should terminate when
     * this step is executed.

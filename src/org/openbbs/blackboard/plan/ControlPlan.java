@@ -13,7 +13,7 @@ public interface ControlPlan
     * Get a descriptive name for the plan.
     */
    public String getName();
-   
+
    /**
     * Get the steps which are possible at the moment.
     */

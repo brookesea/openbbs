@@ -10,23 +10,21 @@ package org.openbbs.blackboard;
  */
 public class BlackboardZoneException extends BlackboardException
 {
-   public BlackboardZoneException()
-   {
+   public BlackboardZoneException() {
       super();
    }
 
-   public BlackboardZoneException(String message, Throwable cause)
-   {
+   public BlackboardZoneException(String message, Throwable cause) {
       super(message, cause);
    }
 
-   public BlackboardZoneException(String message)
-   {
+   public BlackboardZoneException(String message) {
       super(message);
    }
 
-   public BlackboardZoneException(Throwable cause)
-   {
+   public BlackboardZoneException(Throwable cause) {
       super(cause);
    }
+
+   private static final long serialVersionUID = 2196804957873749995L;
 }

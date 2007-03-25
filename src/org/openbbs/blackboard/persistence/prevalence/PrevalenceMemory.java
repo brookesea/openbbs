@@ -22,7 +22,7 @@ public class PrevalenceMemory implements BlackboardMemory
    private Snapshotter snapshotter = null;
    private LogFile logFile;
    private boolean locked = false;
-   
+
    /**
     * Create a new PrevalenceMemory. You have to set at least a
     * logFile before entries can be stored in a memory. If you
@@ -45,7 +45,7 @@ public class PrevalenceMemory implements BlackboardMemory
 
       this.logFile = logFile;
    }
-   
+
    /**
     * Set the Snapshotter to be used to create snapshots of this
     * memory.
@@ -66,13 +66,13 @@ public class PrevalenceMemory implements BlackboardMemory
     */
    public void restore() {
       Validate.notNull(this.logFile, "logFile is not set");
-      
+
       this.checkLocked();
       this.lock();
-      
+
       try {
          this.memory.clear();
-      
+
          if (this.snapshotter != null) {
             this.snapshotter.restoreFromSnapshot(this.memory);
          }
@@ -99,7 +99,7 @@ public class PrevalenceMemory implements BlackboardMemory
          this.unlock();
       }
    }
-   
+
    /**
     * Store a snapshot of the memory's current state and reset the
     * logfile. The Snapshotter property must be set in order for
@@ -113,7 +113,7 @@ public class PrevalenceMemory implements BlackboardMemory
       if (this.snapshotter == null) {
          throw new IllegalStateException("no Snapshotter defined for this memory");
       }
-      
+
       this.checkLocked();
       this.lock();
 
@@ -125,7 +125,7 @@ public class PrevalenceMemory implements BlackboardMemory
          this.unlock();
       }
    }
-   
+
    /**
     * Prevent reading and writing to the memory. If you try to
     * read or modify a locked memory, a MemoryLockedException
@@ -137,7 +137,7 @@ public class PrevalenceMemory implements BlackboardMemory
       }
       this.locked = true;
    }
-   
+
    /**
     * Unlock the previously locked memory.
     */
@@ -147,7 +147,7 @@ public class PrevalenceMemory implements BlackboardMemory
       }
       this.locked = false;
    }
-   
+
    /**
     * Is the memory currently locked?
     */
@@ -222,7 +222,7 @@ public class PrevalenceMemory implements BlackboardMemory
       this.checkLocked();
       return this.memory.zoneExists(zone);
    }
-   
+
    /**
     * Throw a MemoryLockedException if the memory is locked.
     */
