@@ -21,4 +21,6 @@ class CreateZoneCommand implements PrevalenceCommand
       Validate.notNull(playbackDelegate, "no playbackDelegate");
       playbackDelegate.createZone(this.zone);
    }
+
+   private static final long serialVersionUID = -3352770516329017736L;
 }

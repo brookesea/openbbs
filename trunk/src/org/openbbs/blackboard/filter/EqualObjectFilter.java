@@ -15,14 +15,12 @@ public class EqualObjectFilter implements EntryFilter
 {
    private Object object = null;
 
-   public EqualObjectFilter(Object object)
-   {
+   public EqualObjectFilter(Object object) {
       Validate.notNull(object);
       this.object = object;
    }
 
-   public boolean selects(Object entry)
-   {
+   public boolean selects(Object entry) {
       return entry.equals(this.object);
    }
 }

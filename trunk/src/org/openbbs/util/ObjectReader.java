@@ -37,7 +37,7 @@ public class ObjectReader
 
    public void readObjects(Delegate delegate) throws Exception {
       Validate.notNull(delegate);
-      
+
       if (this.streamIsEmpty) {
          return;
       }

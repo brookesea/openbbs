@@ -10,7 +10,7 @@ public class SpringPrevalenceMemory extends PrevalenceMemory implements Initiali
 {
    private boolean initialRestore = true;
    private boolean snapshotAfterInitialRestore = false;
-   
+
    /**
     * If set to true, the initial contents of the memory is restored from
     * its logfile (and from the latest snapshot if available). You most
@@ -20,7 +20,7 @@ public class SpringPrevalenceMemory extends PrevalenceMemory implements Initiali
    public void setInitialRestore(boolean initialRestore) {
       this.initialRestore = initialRestore;
    }
-   
+
    /**
     * Determines if a snapshot is created upon initial restore (only
     * if initalRestore is set to true). This is useful to reduce the
@@ -32,7 +32,7 @@ public class SpringPrevalenceMemory extends PrevalenceMemory implements Initiali
    public void setSnapshotAfterInitialRestore(boolean snapshotAfterInitialRestore) {
       this.snapshotAfterInitialRestore = snapshotAfterInitialRestore;
    }
-   
+
    /**
     * @see InitializingBean#afterPropertiesSet()
     */
@@ -40,7 +40,7 @@ public class SpringPrevalenceMemory extends PrevalenceMemory implements Initiali
       if (this.initialRestore) {
          this.restore();
          if (this.snapshotAfterInitialRestore) {
-            this.snapshot();    
+            this.snapshot();
          }
       }
    }

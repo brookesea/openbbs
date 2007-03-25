@@ -29,7 +29,7 @@ public class TransientMemory implements BlackboardMemory, SnapshottableMemory, S
 {
    private Map<Zone, Set<Object>> zones = new HashMap<Zone, Set<Object>>();
    private Map<Object, Zone> entries = new HashMap<Object, Zone>();
-   
+
    /**
     * Remove all zones and entries from the memory. If this method fails,
     * the state of the memory is undefined.
@@ -284,4 +284,6 @@ public class TransientMemory implements BlackboardMemory, SnapshottableMemory, S
          return this.nextZone != null;
       }
    }
+
+   private static final long serialVersionUID = -7853510868367120188L;
 }

@@ -10,23 +10,21 @@ package org.openbbs.blackboard;
  */
 public class ReadBlackboardException extends BlackboardException
 {
-   public ReadBlackboardException()
-   {
+   public ReadBlackboardException() {
       super();
    }
 
-   public ReadBlackboardException(String message, Throwable cause)
-   {
+   public ReadBlackboardException(String message, Throwable cause) {
       super(message, cause);
    }
 
-   public ReadBlackboardException(String message)
-   {
+   public ReadBlackboardException(String message) {
       super(message);
    }
 
-   public ReadBlackboardException(Throwable cause)
-   {
+   public ReadBlackboardException(Throwable cause) {
       super(cause);
    }
+
+   private static final long serialVersionUID = -7499870971499361859L;
 }

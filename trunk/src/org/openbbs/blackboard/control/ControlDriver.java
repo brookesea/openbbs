@@ -5,12 +5,12 @@
  */
 package org.openbbs.blackboard.control;
 
-
 /**
  * @author stefan
  */
 public interface ControlDriver
 {
    public void attachControl(BlackboardControl control);
+
    public void detachControl(BlackboardControl control);
 }

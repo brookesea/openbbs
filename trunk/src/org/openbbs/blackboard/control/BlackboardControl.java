@@ -47,7 +47,7 @@ public class BlackboardControl
       Validate.notNull(zone);
       this.zone = zone;
    }
-   
+
    public void setCloseZoneOnTerminate(boolean removeZoneOnTerminate) {
       this.closeZoneOnTerminate = removeZoneOnTerminate;
    }
@@ -61,7 +61,7 @@ public class BlackboardControl
       Validate.notNull(ksSelectionStrategy);
       this.ksSelectionStrategy = ksSelectionStrategy;
    }
-   
+
    public void setTransformations(List<KnowledgeSource> transformations) {
       this.transformations = null;
    }
@@ -137,19 +137,19 @@ public class BlackboardControl
 
       return null;
    }
-   
+
    private void runApplicableTransformations(KSExecutionContext executionContext) {
       if (this.transformations == null || this.transformations.isEmpty()) {
          return;
       }
-      
+
       for (KnowledgeSource transformation : this.transformations) {
          if (transformation.isEnabled(executionContext)) {
             transformation.execute(executionContext);
          }
       }
    }
-   
+
    private void terminate() {
       this.driver.detachControl(this);
       this.driver = null;
@@ -162,7 +162,7 @@ public class BlackboardControl
    private KSExecutionContext createKSExecutionContext() {
       return new KSExecutionContextImpl(this.blackboard, this.zone);
    }
-   
+
    private void notifyListenersPossibleStepsSelected(List<PlanStep> steps) {
       steps = Collections.unmodifiableList(steps);
       for (BlackboardControlListener listener : this.listeners)

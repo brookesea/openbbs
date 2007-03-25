@@ -18,5 +18,6 @@ import org.openbbs.blackboard.plan.PlanStep;
 public interface BlackboardControlListener
 {
    public void didSelectPossibleSteps(BlackboardControl control, List<PlanStep> steps);
+
    public void didSelectNextSource(BlackboardControl control, KnowledgeSource source);
 }

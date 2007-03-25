@@ -16,22 +16,19 @@ class KSExecutionContextImpl implements KSExecutionContext
 {
    private final Blackboard blackboard;
    private final BlackboardAccess defaultAccess;
-   
-   public KSExecutionContextImpl(Blackboard blackboard, Zone zone)
-   {
+
+   public KSExecutionContextImpl(Blackboard blackboard, Zone zone) {
       Validate.notNull(blackboard);
       Validate.notNull(zone);
       this.blackboard = blackboard;
       this.defaultAccess = new ZonedBlackboardAccess(blackboard, zone);
    }
 
-   public BlackboardAccess blackboard()
-   {
+   public BlackboardAccess blackboard() {
       return this.defaultAccess;
    }
 
-   public BlackboardAccess blackboard(Zone zone)
-   {
+   public BlackboardAccess blackboard(Zone zone) {
       Validate.notNull(zone);
       // TODO: security check (access to zone allowed?)
       return new ZonedBlackboardAccess(this.blackboard, zone);

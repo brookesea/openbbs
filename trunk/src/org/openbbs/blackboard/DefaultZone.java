@@ -12,23 +12,21 @@ package org.openbbs.blackboard;
  */
 public final class DefaultZone implements Zone
 {
-   public String name()
-   {
+   public String name() {
       return "DEFAULT_ZONE";
    }
 
-   public boolean equals(Object obj)
-   {
+   public boolean equals(Object obj) {
       return (obj != null && (obj instanceof DefaultZone));
    }
 
-   public int hashCode()
-   {
+   public int hashCode() {
       return DefaultZone.class.hashCode();
    }
 
-   public String toString()
-   {
+   public String toString() {
       return "the default Zone";
    }
+
+   private static final long serialVersionUID = 8704637445602562456L;
 }

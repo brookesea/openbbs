@@ -5,8 +5,7 @@ package org.openbbs.util;
  */
 public class ClassnameHelper
 {
-   public static String nameWithoutPackage(Class clazz)
-   {
+   public static String nameWithoutPackage(Class clazz) {
       if (clazz == null) return "null";
 
       int lastDotIndex = clazz.getName().lastIndexOf('.');

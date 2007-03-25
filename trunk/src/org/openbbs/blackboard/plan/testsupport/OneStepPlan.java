@@ -20,13 +20,11 @@ import org.openbbs.blackboard.plan.PlanStep;
  */
 public final class OneStepPlan implements ControlPlan
 {
-   public String getName()
-   {
+   public String getName() {
       return "OneStepPlan";
    }
-   
-   public List<PlanStep> getPossibleSteps()
-   {
+
+   public List<PlanStep> getPossibleSteps() {
       List<PlanStep> steps = new ArrayList<PlanStep>();
       steps.add(new NamedPlanStep("UNIVERSAL_STEP"));
       return steps;

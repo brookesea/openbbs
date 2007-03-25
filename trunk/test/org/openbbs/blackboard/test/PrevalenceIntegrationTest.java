@@ -61,7 +61,7 @@ public class PrevalenceIntegrationTest extends TestCase
       }
 
       // first half of entries, then snapshot, then the rest
-      List remainingEntries = new ArrayList(this.entries.keySet());
+      List<Object> remainingEntries = new ArrayList<Object>(this.entries.keySet());
       for (int i = 0; i < remainingEntries.size() / 2; i++) {
          Object entry = remainingEntries.get(0);
          bb.write(this.entries.get(entry), entry);

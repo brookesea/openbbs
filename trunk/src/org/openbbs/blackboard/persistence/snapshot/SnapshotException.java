@@ -20,4 +20,6 @@ public class SnapshotException extends RuntimeException
    public SnapshotException(Throwable cause) {
       super(cause);
    }
+
+   private static final long serialVersionUID = 7505707316608223534L;
 }

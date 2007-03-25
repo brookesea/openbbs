@@ -16,8 +16,7 @@ public class ZonedBlackboardAccess implements BlackboardAccess
    private final Zone zone;
    private final ZoneSelector zoneSelector;
 
-   public ZonedBlackboardAccess(Blackboard blackboard, Zone zone)
-   {
+   public ZonedBlackboardAccess(Blackboard blackboard, Zone zone) {
       Validate.notNull(blackboard);
       Validate.notNull(zone);
       this.blackboard = blackboard;
@@ -25,28 +24,23 @@ public class ZonedBlackboardAccess implements BlackboardAccess
       this.zoneSelector = new ExactZoneSelector(zone);
    }
 
-   public boolean exists(EntryFilter filter)
-   {
+   public boolean exists(EntryFilter filter) {
       return this.blackboard.exists(this.zoneSelector, filter);
    }
 
-   public Object read(EntryFilter filter)
-   {
+   public Object read(EntryFilter filter) {
       return this.blackboard.read(this.zoneSelector, filter);
    }
 
-   public Set<Object> readAll(EntryFilter filter)
-   {
+   public Set<Object> readAll(EntryFilter filter) {
       return this.blackboard.readAll(this.zoneSelector, filter);
    }
 
-   public Object take(EntryFilter filter)
-   {
+   public Object take(EntryFilter filter) {
       return this.blackboard.take(this.zoneSelector, filter);
    }
 
-   public void write(Object entry)
-   {
+   public void write(Object entry) {
       this.blackboard.write(this.zone, entry);
    }
 }

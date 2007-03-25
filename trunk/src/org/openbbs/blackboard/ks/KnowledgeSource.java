@@ -15,5 +15,6 @@ package org.openbbs.blackboard.ks;
 public interface KnowledgeSource
 {
    public boolean isEnabled(KSExecutionContext context);
+
    public void execute(KSExecutionContext context);
 }

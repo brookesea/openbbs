@@ -21,4 +21,6 @@ public class BlackboardMemoryException extends RuntimeException
    public BlackboardMemoryException(Throwable cause) {
       super(cause);
    }
+
+   private static final long serialVersionUID = -6076245270904356897L;
 }

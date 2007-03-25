@@ -40,7 +40,7 @@ public class ObjectBlackboard implements Blackboard
       Validate.notNull(cloneStrategy);
       this.cloneStrategy = cloneStrategy;
    }
-   
+
    public void setMemory(BlackboardMemory memory) {
       Validate.notNull(memory);
       this.memory = memory;
@@ -98,7 +98,7 @@ public class ObjectBlackboard implements Blackboard
       if (!it.hasNext()) {
          return null;
       }
-      
+
       return this.cloneStrategy.clone(it.next());
    }
 
@@ -126,13 +126,13 @@ public class ObjectBlackboard implements Blackboard
       if (!it.hasNext()) {
          throw new ReadBlackboardException("no entry selected");
       }
-      
+
       Object takenEntry = it.next();
       Zone zoneOfTakenEntry = this.memory.getZone(takenEntry);
       this.memory.removeEntry(takenEntry);
-      
+
       this.notifyEntryRemoved(zoneOfTakenEntry, takenEntry);
-      
+
       return takenEntry;
    }
 

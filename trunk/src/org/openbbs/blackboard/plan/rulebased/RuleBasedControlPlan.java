@@ -27,25 +27,21 @@ public class RuleBasedControlPlan implements ControlPlan
    private final Map<String, RuleBasedPlanStep> stepsByName = new HashMap<String, RuleBasedPlanStep>();
    private String name = null;
 
-   public RuleBasedControlPlan()
-   {
+   public RuleBasedControlPlan() {
       this(null);
    }
 
-   public RuleBasedControlPlan(String name)
-   {
+   public RuleBasedControlPlan(String name) {
       this.name = name;
    }
 
-   public String getName()
-   {
+   public String getName() {
       if (this.name == null) this.name = ClassnameHelper.nameWithoutPackage(this.getClass());
 
       return this.name;
    }
 
-   public RuleBasedPlanStep step(String name)
-   {
+   public RuleBasedPlanStep step(String name) {
       Validate.notNull(name);
 
       if (this.stepsByName.containsKey(name)) return this.stepsByName.get(name);
@@ -53,13 +49,11 @@ public class RuleBasedControlPlan implements ControlPlan
       return this.step(new RuleBasedPlanStep(name));
    }
 
-   public RuleBasedPlanStep step(RuleBasedPlanStep step)
-   {
+   public RuleBasedPlanStep step(RuleBasedPlanStep step) {
       Validate.notNull(step);
 
       if (this.stepsByName.containsKey(step.getName())) {
-         throw new IllegalArgumentException("a step named " + step.getName()
-                  + " already exists in this plan");
+         throw new IllegalArgumentException("a step named " + step.getName() + " already exists in this plan");
       }
 
       this.steps.add(step);
@@ -68,15 +62,12 @@ public class RuleBasedControlPlan implements ControlPlan
       return step;
    }
 
-   public void removeStep(PlanStep step)
-   {
+   public void removeStep(PlanStep step) {
       Validate.notNull(step);
-      if (!this.steps.remove(step))
-         throw new IllegalArgumentException(step.toString() + " is not part of this plan");
+      if (!this.steps.remove(step)) throw new IllegalArgumentException(step.toString() + " is not part of this plan");
    }
 
-   public List<PlanStep> getPossibleSteps()
-   {
+   public List<PlanStep> getPossibleSteps() {
       List<PlanStep> possibleSteps = new ArrayList<PlanStep>();
 
       for (RuleBasedPlanStep candidate : this.steps)

@@ -10,8 +10,7 @@ package org.openbbs.blackboard.plan.rulebased;
  */
 public class AlwaysTruePlanStepCondition implements PlanStepCondition
 {
-   public boolean evaluate()
-   {
+   public boolean evaluate() {
       return true;
    }
 }

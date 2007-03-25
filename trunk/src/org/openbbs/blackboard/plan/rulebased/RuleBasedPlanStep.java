@@ -16,71 +16,59 @@ public class RuleBasedPlanStep implements PlanStep
    private final String name;
    private boolean isTerminationStep = false;
 
-   public RuleBasedPlanStep(String name)
-   {
+   public RuleBasedPlanStep(String name) {
       Validate.notNull(name);
       this.name = name;
    }
 
-   public String getName()
-   {
+   public String getName() {
       return this.name;
    }
 
-   public RuleBasedPlanStep when(PlanStepCondition condition)
-   {
+   public RuleBasedPlanStep when(PlanStepCondition condition) {
       Validate.notNull(condition);
       this.conditions.add(condition);
       return this;
    }
 
-   public RuleBasedPlanStep always()
-   {
+   public RuleBasedPlanStep always() {
       return this.when(new AlwaysTruePlanStepCondition());
    }
 
-   public RuleBasedPlanStep or(PlanStepCondition condition)
-   {
+   public RuleBasedPlanStep or(PlanStepCondition condition) {
       return this.when(condition);
    }
 
-   public RuleBasedPlanStep and(PlanStepCondition condition1, PlanStepCondition condition2)
-   {
+   public RuleBasedPlanStep and(PlanStepCondition condition1, PlanStepCondition condition2) {
       return this.when(new PlanConditionConjunction(condition1).and(condition2));
    }
 
-   public RuleBasedPlanStep terminates(boolean value)
-   {
+   public RuleBasedPlanStep terminates(boolean value) {
       this.isTerminationStep = value;
       return this;
    }
 
-   public boolean terminates()
-   {
+   public boolean terminates() {
       return this.isTerminationStep;
    }
 
-   public boolean isActive()
-   {
+   public boolean isActive() {
       for (PlanStepCondition condition : this.conditions)
          if (condition.evaluate()) return true;
 
       return false;
    }
 
-   public boolean equals(Object obj)
-   {
+   public boolean equals(Object obj) {
       if (obj != null || !(obj instanceof PlanStep)) return false;
       return this.getName().equals(((PlanStep)obj).getName());
    }
 
-   public int hashCode()
-   {
+   public int hashCode() {
       return this.getName().hashCode();
    }
 
-   public String toString()
-   {
+   public String toString() {
       return "a RuleBasedPlanStep \"" + this.name + "\"";
    }
 }

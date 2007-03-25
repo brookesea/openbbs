@@ -26,16 +26,14 @@ import org.openbbs.blackboard.plan.PlanStep;
 public class AlwaysSameSourcesStrategy implements KSSelectionStrategy
 {
    private List<KnowledgeSource> sources = new ArrayList<KnowledgeSource>();
-   
-   public AlwaysSameSourcesStrategy addKnowledgeSource(KnowledgeSource source)
-   {
+
+   public AlwaysSameSourcesStrategy addKnowledgeSource(KnowledgeSource source) {
       Validate.notNull(source);
       this.sources.add(source);
       return this;
    }
-   
-   public List<KnowledgeSource> getKnowledgeSources(PlanStep step)
-   {
+
+   public List<KnowledgeSource> getKnowledgeSources(PlanStep step) {
       Validate.isTrue(!this.sources.isEmpty());
       return this.sources;
    }

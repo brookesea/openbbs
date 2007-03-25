@@ -24,8 +24,7 @@ public class CreditabilityBasedStrategy implements KSSelectionStrategy
    private final Map<PlanStep, Map<KnowledgeSource, Integer>> creditabilities = new HashMap<PlanStep, Map<KnowledgeSource, Integer>>();
    private final Map<PlanStep, List<KnowledgeSource>> sources = new HashMap<PlanStep, List<KnowledgeSource>>();
 
-   public void addKnowledgeSource(PlanStep step, KnowledgeSource ks, int creditability)
-   {
+   public void addKnowledgeSource(PlanStep step, KnowledgeSource ks, int creditability) {
       Validate.notNull(step);
       Validate.notNull(ks);
       Validate.isTrue(!step.equals(NoStep.instance), "cannot add a \"no step \" to this strategy");
@@ -41,8 +40,7 @@ public class CreditabilityBasedStrategy implements KSSelectionStrategy
       this.sortKSByCreditability(step, ksForStep);
    }
 
-   public Collection<KnowledgeSource> getKnowledgeSources(PlanStep step)
-   {
+   public Collection<KnowledgeSource> getKnowledgeSources(PlanStep step) {
       Validate.notNull(step);
 
       if (!this.sources.containsKey(step)) {
@@ -52,8 +50,7 @@ public class CreditabilityBasedStrategy implements KSSelectionStrategy
       return Collections.unmodifiableList(this.sources.get(step));
    }
 
-   private void _setCreditability(PlanStep step, KnowledgeSource ks, int creditability)
-   {
+   private void _setCreditability(PlanStep step, KnowledgeSource ks, int creditability) {
       Map<KnowledgeSource, Integer> creditabilitiesForStep = this.creditabilities.get(step);
       if (creditabilitiesForStep == null) {
          creditabilitiesForStep = new HashMap<KnowledgeSource, Integer>();
@@ -62,8 +59,7 @@ public class CreditabilityBasedStrategy implements KSSelectionStrategy
       creditabilitiesForStep.put(ks, creditability);
    }
 
-   private Integer getCreditability(PlanStep step, KnowledgeSource ks)
-   {
+   private Integer getCreditability(PlanStep step, KnowledgeSource ks) {
       Map<KnowledgeSource, Integer> creditabilitiesForStep = this.creditabilities.get(step);
       if (creditabilitiesForStep == null) {
          return null;
@@ -71,12 +67,10 @@ public class CreditabilityBasedStrategy implements KSSelectionStrategy
       return creditabilitiesForStep.get(ks);
    }
 
-   private void sortKSByCreditability(PlanStep step, List<KnowledgeSource> ksList)
-   {
+   private void sortKSByCreditability(PlanStep step, List<KnowledgeSource> ksList) {
       final PlanStep _step = step;
       Collections.sort(ksList, new Comparator<KnowledgeSource>() {
-         public int compare(KnowledgeSource ks1, KnowledgeSource ks2)
-         {
+         public int compare(KnowledgeSource ks1, KnowledgeSource ks2) {
             return getCreditability(_step, ks2).compareTo(getCreditability(_step, ks1));
          }
       });

@@ -14,12 +14,10 @@ import org.apache.commons.lang.Validate;
  */
 public class CloneBySerializationStrategy implements CloneStrategy
 {
-   public Object clone(Object obj)
-   {
+   public Object clone(Object obj) {
       if (obj == null) return null;
 
-      Validate.isTrue(obj instanceof Serializable, "object " + obj.toString()
-               + " is not serializable");
+      Validate.isTrue(obj instanceof Serializable, "object " + obj.toString() + " is not serializable");
       return SerializationUtils.clone((Serializable)obj);
    }
 }

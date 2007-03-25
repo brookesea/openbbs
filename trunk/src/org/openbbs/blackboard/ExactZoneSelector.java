@@ -16,14 +16,12 @@ public class ExactZoneSelector implements ZoneSelector
 {
    private Zone zone = null;
 
-   public ExactZoneSelector(Zone zone)
-   {
+   public ExactZoneSelector(Zone zone) {
       Validate.notNull(zone);
       this.zone = zone;
    }
 
-   public boolean selects(Zone zone)
-   {
+   public boolean selects(Zone zone) {
       return this.zone.equals(zone);
    }
 }

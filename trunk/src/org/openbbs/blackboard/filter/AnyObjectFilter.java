@@ -12,8 +12,7 @@ import org.openbbs.blackboard.EntryFilter;
  */
 public class AnyObjectFilter implements EntryFilter
 {
-   public boolean selects(Object entry)
-   {
+   public boolean selects(Object entry) {
       return true;
    }
 }

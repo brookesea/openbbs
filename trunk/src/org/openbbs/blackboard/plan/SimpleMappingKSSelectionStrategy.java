@@ -19,29 +19,26 @@ import org.openbbs.blackboard.ks.KnowledgeSource;
 public class SimpleMappingKSSelectionStrategy implements KSSelectionStrategy
 {
    private Map<String, KnowledgeSource> mappings = new HashMap<String, KnowledgeSource>();
-   
-   public void createMapping(PlanStep step, KnowledgeSource knowledgeSource)
-   {
+
+   public void createMapping(PlanStep step, KnowledgeSource knowledgeSource) {
       Validate.notNull(step);
       Validate.notNull(knowledgeSource);
       mappings.put(step.getName(), knowledgeSource);
    }
-   
-   public void setMappings(Map<String, KnowledgeSource> mappings)
-   {
+
+   public void setMappings(Map<String, KnowledgeSource> mappings) {
       Validate.notNull(mappings);
       this.mappings = mappings;
    }
-   
-   public Collection<KnowledgeSource> getKnowledgeSources(PlanStep step)
-   {
+
+   public Collection<KnowledgeSource> getKnowledgeSources(PlanStep step) {
       Validate.notNull(step);
-      
+
       KnowledgeSource ks = this.mappings.get(step.getName());
       if (ks == null) {
          return Collections.emptyList();
       }
-      
+
       List<KnowledgeSource> ksList = new ArrayList<KnowledgeSource>();
       ksList.add(ks);
       return ksList;

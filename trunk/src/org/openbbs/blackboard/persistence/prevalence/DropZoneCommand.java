@@ -21,4 +21,6 @@ class DropZoneCommand implements PrevalenceCommand
       Validate.notNull(playbackDelegate, "no playbackDelegate");
       playbackDelegate.dropZone(this.zone);
    }
+
+   private static final long serialVersionUID = 4013067478240882017L;
 }
