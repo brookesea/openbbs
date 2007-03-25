@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="OpenBBS" basedir=".." default="tests">
+
+   <property name="src" value="${basedir}/src" />
+   <property name="tests" value="${basedir}/test" />
+   <property name="build" value="${basedir}/build" />
+   <property name="build.classes" value="${build}/classes" />
+   <property name="build.tests" value="${build}/tests" />
+   <property name="build.test-reports" value="${build}/test-reports" />
+   <property name="reports" value="${basedir}/reports" />
+   <property name="reports.junit" value="${reports}/junit" />
+   <property name="reports.javadoc" value="${reports}/javadoc" />
+   <property name="dependencies" value="${basedir}/dependencies" />
+   <property name="dist" value="${basedir}/dist" />
+   <property name="version" value="0.8" />
+   <property name="dist-version" value="${dist}/${version}" />
+
+   <!-- Path definitions -->
+   <path id="compile-classpath">
+      <fileset dir="${dependencies}">
+         <include name="commons-lang-2.3.jar" />
+         <include name="spring-2.0.3.jar" />
+      </fileset>
+   </path>
+   
+   <path id="test-classpath">
+      <path refid="compile-classpath" />
+      <fileset dir="${dependencies}">
+         <include name="junit-3.8.2.jar" />
+         <include name="jmock-1.1.0.jar" />
+      </fileset>
+      <pathelement location="${build.classes}" />
+   </path>
+   
+   <!-- Private targets -->
+   <target name="-init-compile">
+      <mkdir dir="${build.classes}" />
+   </target>
+   
+   <target name="-init-tests">
+      <mkdir dir="${build.tests}" />
+      <mkdir dir="${build.test-reports}" />
+   </target>
+   
+   <target name="-init-reports">
+      <mkdir dir="${reports.junit}" />
+      <mkdir dir="${reports.javadoc}" />
+   </target>      
+
+   <target name="-init-dist">
+      <mkdir dir="${dist-version}" />
+   </target>
+   
+   <target name="-clean-compile">
+      <delete dir="${build.classes}" />
+      <!-- recreate directory, otherwise Eclipse gets confused -->
+      <mkdir dir="${build.classes}" />
+   </target>
+
+   <target name="-clean-tests">
+      <delete dir="${build.tests}" />
+      <delete dir="${build.test-reports}" />
+      <!-- recreate directory, otherwise Eclipse gets confused -->
+      <mkdir dir="${build.tests}" />
+   </target>
+   
+   <target name="-clean-reports">
+      <delete dir="${reports}" />
+   </target>
+   
+   <target name="-clean-dist">
+      <delete dir="${dist}" />
+   </target>
+   
+   <target name="-compile">
+      <javac srcdir="${src}" destdir="${build.classes}" debug="on" classpathref="compile-classpath" />
+   </target>
+   
+   <target name="-compile-tests">
+      <javac srcdir="${tests}" destdir="${build.tests}" debug="on" classpathref="test-classpath" />
+   </target>
+   
+   <target name="-tests">
+      <junit printsummary="yes" haltonfailure="no" haltonerror="no">
+         <classpath>
+            <path refid="test-classpath" />
+            <pathelement location="${build.tests}" />
+         </classpath>
+         <formatter type="xml" usefile="yes" />
+         <batchtest todir="${build.test-reports}">
+            <fileset dir="${build.tests}">
+               <include name="**/test/**/*Test.class" />
+            </fileset>
+         </batchtest>
+      </junit>
+   </target>
+      
+   <target name="-junit-report">
+      <junitreport todir="${build.test-reports}">
+         <fileset dir="${build.test-reports}">
+            <include name="TEST-*.xml" />
+         </fileset>
+         <report format="frames" todir="${reports.junit}" />
+      </junitreport>
+   </target>
+   
+   <target name="-javadoc-report">
+      <javadoc destdir="${reports.javadoc}" windowtitle="OpenBBS Framework Documentation">
+         <fileset dir="${src}" defaultexcludes="yes">
+            <include name="**/*.java" />
+         </fileset>
+      </javadoc>
+   </target>
+
+   <target name="-dist-jar">
+      <jar destfile="${dist-version}/OpenBBS-${version}.jar" update="false">
+         <fileset dir="${build.classes}" />
+      </jar>
+   </target>
+   
+   <target name="-dist-src-ide">
+      <jar destfile="${dist-version}/OpenBBS-${version}-src-ide.jar" update="false">
+         <fileset dir="${src}" />
+      </jar>
+   </target>
+   
+   <target name="-dist-javadoc">
+      <mkdir dir="${build}/javadoc" />
+      <copy todir="${build}/javadoc">
+         <fileset dir="${reports.javadoc}" includes="*/**" />
+      </copy>
+      <zip destfile="${dist-version}/OpenBBS-${version}-javadoc.zip" update="false">
+         <fileset dir="${build}" includes="javadoc/**" />
+      </zip>
+      <delete dir="${build}/javadoc" />
+   </target>
+   
+   <target name="-dist-src">
+      <mkdir dir="${build}/dist-src/OpenBBS-${version}" />
+      <copy todir="${build}/dist-src/OpenBBS-${version}">
+         <fileset dir="${basedir}">
+            <include name="LICENSE.txt" />
+            <include name="src/**" />
+            <include name="test/**" />
+            <include name="dependencies/**" />
+            <include name="build/build.xml" />
+         </fileset>
+         <fileset dir="${dist-version}">
+            <include name="OpenBBS-${version}.jar" />
+         </fileset>
+      </copy>
+      <zip destfile="${dist-version}/OpenBBS-${version}-src.zip" update="false">
+         <fileset dir="${build}/dist-src">
+            <include name="OpenBBS-${version}/**" />
+         </fileset>
+      </zip>
+      <delete dir="${build}/dist-src" />
+   </target>
+   
+   <target name="-dist-bin">
+      <mkdir dir="${build}/dist-bin/OpenBBS-${version}" />
+      <copy todir="${build}/dist-bin/OpenBBS-${version}">
+         <fileset dir="${basedir}">
+            <include name="LICENSE.txt" />
+            <include name="dependencies/commons-lang-*.jar" />
+         </fileset>
+         <fileset dir="${dist-version}">
+            <include name="OpenBBS-${version}.jar" />
+            <include name="OpenBBS-${version}-src-ide.jar" />
+            <include name="OpenBBS-${version}-javadoc.zip" />
+         </fileset>
+      </copy>
+      <zip destfile="${dist-version}/OpenBBS-${version}-bin.zip" update="false">
+         <fileset dir="${build}/dist-bin">
+            <include name="OpenBBS-${version}/**" />
+         </fileset>
+      </zip>
+      <delete dir="${build}/dist-bin" />
+   </target>
+   
+   <!-- Private targets used only for dependencies -->
+   <target name="--clean" depends="-clean-compile, -clean-tests, -clean-reports, -clean-dist" />
+   <target name="--compile" depends="-init-compile, -compile" />
+   <target name="--tests" depends="--compile, -init-tests, -compile-tests, -tests" />
+   <target name="--reports" depends="--tests, -init-reports, -junit-report, -javadoc-report" />
+   <target name="--dist" depends="--compile, --tests, --reports, -init-dist, -dist-jar, -dist-src-ide, -dist-javadoc, -dist-src, -dist-bin" />
+
+   <!-- Public targets with description -->
+   <target name="clean" description="Remove build products and intermediate files" depends="--clean" />
+   <target name="compile" description="Compile OpenBBS framework" depends="--compile" />
+   <target name="tests" description="Compile and run test framework tests" depends="--tests" />
+   <target name="reports" description="Create test reports (JUnit, Coverage, JavaDoc" depends="--reports" />
+   <target name="dist" description="Build all artefacts for a distribution" depends="--dist" />
+
+</project>
