@@ -1,0 +1,20 @@
+
+                         Release Notes for
+ 
+                             OpenBBS
+                     Open Blackboard Framework
+                           Version 0.8
+                           
+                  
+INTRODUCTION
+
+This file contains the release for the OpenBBS framework. For more
+information about the framework please visit the project homepage
+at http://openbbs.sourceforge.net/
+
+VERSION 0.8 (2006-03-25)
+
+This is the first public release of the OpenBBS framework since it
+has been moved to sourceforge.
+
+ 

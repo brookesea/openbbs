@@ -140,6 +140,7 @@
       <mkdir dir="${build}/dist-src/OpenBBS-${version}" />
       <copy todir="${build}/dist-src/OpenBBS-${version}">
          <fileset dir="${basedir}">
+            <include name="LICENSE.txt" />
             <include name="src/**" />
             <include name="test/**" />
             <include name="dependencies/**" />
@@ -161,6 +162,7 @@
       <mkdir dir="${build}/dist-bin/OpenBBS-${version}" />
       <copy todir="${build}/dist-bin/OpenBBS-${version}">
          <fileset dir="${basedir}">
+            <include name="LICENSE.txt" />
             <include name="dependencies/commons-lang-*.jar" />
          </fileset>
          <fileset dir="${dist-version}">
