@@ -6,15 +6,20 @@
    <property name="tests" value="${basedir}/test" />
    <property name="build" value="${basedir}/build" />
    <property name="build.classes" value="${build}/classes" />
+   <property name="build.instrumented.classes" value="${build}/instrumented-classes" />
    <property name="build.tests" value="${build}/tests" />
    <property name="build.test-reports" value="${build}/test-reports" />
    <property name="reports" value="${basedir}/reports" />
    <property name="reports.junit" value="${reports}/junit" />
    <property name="reports.javadoc" value="${reports}/javadoc" />
+   <property name="reports.coverage" value="${reports}/coverage" />
    <property name="dependencies" value="${basedir}/dependencies" />
    <property name="dist" value="${basedir}/dist" />
    <property name="version" value="0.8" />
    <property name="dist-version" value="${dist}/${version}" />
+   
+   <property name="cobertura.home" value="/home/sks/Utilities/cobertura-1.8" />
+   <property name="cobertura.datafile" value="${build}/cobertura.ser" />
 
    <!-- Path definitions -->
    <path id="compile-classpath">
@@ -23,35 +28,42 @@
          <include name="spring-2.0.3.jar" />
       </fileset>
    </path>
-   
+
    <path id="test-classpath">
       <path refid="compile-classpath" />
       <fileset dir="${dependencies}">
          <include name="junit-3.8.2.jar" />
          <include name="jmock-1.1.0.jar" />
       </fileset>
-      <pathelement location="${build.classes}" />
+   </path>
+
+   <path id="cobertura.classpath">
+       <fileset dir="${cobertura.home}">
+           <include name="cobertura.jar" />
+           <include name="lib/**/*.jar" />
+       </fileset>
    </path>
    
    <!-- Private targets -->
    <target name="-init-compile">
       <mkdir dir="${build.classes}" />
    </target>
-   
+
    <target name="-init-tests">
       <mkdir dir="${build.tests}" />
       <mkdir dir="${build.test-reports}" />
    </target>
-   
+
    <target name="-init-reports">
       <mkdir dir="${reports.junit}" />
       <mkdir dir="${reports.javadoc}" />
-   </target>      
+      <mkdir dir="${reports.coverage}" />
+   </target>
 
    <target name="-init-dist">
       <mkdir dir="${dist-version}" />
    </target>
-   
+
    <target name="-clean-compile">
       <delete dir="${build.classes}" />
       <!-- recreate directory, otherwise Eclipse gets confused -->
@@ -65,27 +77,50 @@
       <mkdir dir="${build.tests}" />
    </target>
    
+   <target name="-clean-instrumented-classes">
+      <delete dir="${build.instrumented.classes}" />
+   </target>
+
    <target name="-clean-reports">
       <delete dir="${reports}" />
    </target>
-   
+
    <target name="-clean-dist">
       <delete dir="${dist}" />
+   </target>
+
+   <target name="-enable-cobertura" if="enable-cobertura">
+      <delete file="${cobertura.datafile}" />
+      <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+   </target>
+   
+   <target name="-instrument-classes" if="enable-cobertura">
+      <cobertura-instrument todir="${build.instrumented.classes}" datafile="${cobertura.datafile}">
+         <fileset dir="${build.classes}" includes="**/*.class" />
+      </cobertura-instrument>
    </target>
    
    <target name="-compile">
       <javac srcdir="${src}" destdir="${build.classes}" debug="on" classpathref="compile-classpath" />
    </target>
-   
+
    <target name="-compile-tests">
-      <javac srcdir="${tests}" destdir="${build.tests}" debug="on" classpathref="test-classpath" />
-   </target>
-   
-   <target name="-tests">
-      <junit printsummary="yes" haltonfailure="no" haltonerror="no">
+      <javac srcdir="${tests}" destdir="${build.tests}" debug="on">
          <classpath>
             <path refid="test-classpath" />
+            <pathelement location="${build.classes}" />
+         </classpath>
+      </javac>
+   </target>
+
+   <target name="-tests">
+      <junit fork="yes" printsummary="yes" haltonfailure="no" haltonerror="no">
+         <classpath>
+            <path refid="test-classpath" />
+            <path refid="cobertura.classpath" />
             <pathelement location="${build.tests}" />
+            <pathelement location="${build.instrumented.classes}" /> <!-- won't exist or is empty if converage is enabled -->
+            <pathelement location="${build.classes}" /> 
          </classpath>
          <formatter type="xml" usefile="yes" />
          <batchtest todir="${build.test-reports}">
@@ -95,7 +130,7 @@
          </batchtest>
       </junit>
    </target>
-      
+   
    <target name="-junit-report">
       <junitreport todir="${build.test-reports}">
          <fileset dir="${build.test-reports}">
@@ -104,7 +139,7 @@
          <report format="frames" todir="${reports.junit}" />
       </junitreport>
    </target>
-   
+
    <target name="-javadoc-report">
       <javadoc destdir="${reports.javadoc}" windowtitle="OpenBBS Framework Documentation">
          <fileset dir="${src}" defaultexcludes="yes">
@@ -112,19 +147,23 @@
          </fileset>
       </javadoc>
    </target>
+   
+   <target name="-cobertura-report" if="enable-cobertura">
+      <cobertura-report format="html" destdir="${reports.coverage}" srcdir="${src}" datafile="${cobertura.datafile}" />
+   </target>
 
    <target name="-dist-jar">
       <jar destfile="${dist-version}/OpenBBS-${version}.jar" update="false">
          <fileset dir="${build.classes}" />
       </jar>
    </target>
-   
+
    <target name="-dist-src-ide">
       <jar destfile="${dist-version}/OpenBBS-${version}-src-ide.jar" update="false">
          <fileset dir="${src}" />
       </jar>
    </target>
-   
+
    <target name="-dist-javadoc">
       <mkdir dir="${build}/javadoc" />
       <copy todir="${build}/javadoc">
@@ -135,7 +174,7 @@
       </zip>
       <delete dir="${build}/javadoc" />
    </target>
-   
+
    <target name="-dist-src">
       <mkdir dir="${build}/dist-src/OpenBBS-${version}" />
       <copy todir="${build}/dist-src/OpenBBS-${version}">
@@ -157,7 +196,7 @@
       </zip>
       <delete dir="${build}/dist-src" />
    </target>
-   
+
    <target name="-dist-bin">
       <mkdir dir="${build}/dist-bin/OpenBBS-${version}" />
       <copy todir="${build}/dist-bin/OpenBBS-${version}">
@@ -178,12 +217,12 @@
       </zip>
       <delete dir="${build}/dist-bin" />
    </target>
-   
+
    <!-- Private targets used only for dependencies -->
-   <target name="--clean" depends="-clean-compile, -clean-tests, -clean-reports, -clean-dist" />
+   <target name="--clean" depends="-clean-compile, -clean-tests, -clean-instrumented-classes, -clean-reports, -clean-dist" />
    <target name="--compile" depends="-init-compile, -compile" />
-   <target name="--tests" depends="--compile, -init-tests, -compile-tests, -tests" />
-   <target name="--reports" depends="--tests, -init-reports, -junit-report, -javadoc-report" />
+   <target name="--tests" depends="--compile, -init-tests, -clean-instrumented-classes, -enable-cobertura, -instrument-classes, -compile-tests, -tests" />
+   <target name="--reports" depends="-init-reports, --tests, -junit-report, -javadoc-report, -cobertura-report" />
    <target name="--dist" depends="--compile, --tests, --reports, -init-dist, -dist-jar, -dist-src-ide, -dist-javadoc, -dist-src, -dist-bin" />
 
    <!-- Public targets with description -->

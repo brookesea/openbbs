@@ -71,6 +71,11 @@ public class RuleBasedControlPlan implements ControlPlan
 
       return step;
    }
+   
+   public RuleBasedPlanStep step(PlanStep step) {
+      Validate.isTrue(step instanceof RuleBasedPlanStep, step + " is not a RuleBasedPlanStep");
+      return this.step((RuleBasedPlanStep)step);
+   }
 
    public void removeStep(PlanStep step) {
       Validate.notNull(step);
