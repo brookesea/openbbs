@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
+import org.openbbs.blackboard.ks.KSExecutionContext;
 import org.openbbs.blackboard.plan.PlanStep;
 
 /**
@@ -49,6 +50,10 @@ public class RuleBasedPlanStep implements PlanStep
    public RuleBasedPlanStep always() {
       return this.when(new AlwaysTruePlanStepCondition());
    }
+   
+   public RuleBasedPlanStep once() {
+      return this.when(new OncePlanStepCondition());
+   }
 
    public RuleBasedPlanStep or(PlanStepCondition condition) {
       return this.when(condition);
@@ -67,9 +72,9 @@ public class RuleBasedPlanStep implements PlanStep
       return this.isTerminationStep;
    }
 
-   public boolean isActive() {
+   public boolean isActiveInContext(KSExecutionContext context) {
       for (PlanStepCondition condition : this.conditions)
-         if (condition.evaluate()) return true;
+         if (condition.evaluate(this, context)) return true;
 
       return false;
    }

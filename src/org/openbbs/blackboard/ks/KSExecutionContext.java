@@ -19,7 +19,7 @@ import org.openbbs.blackboard.BlackboardAccess;
 import org.openbbs.blackboard.Zone;
 
 /**
- * Provides the execution context for KnowledgeSources.
+ * Provides the context for selecting and executing a KnowledgeSource.
  * 
  * @author stefan
  */

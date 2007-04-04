@@ -18,6 +18,7 @@ package org.openbbs.blackboard.plan.testsupport;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openbbs.blackboard.ks.KSExecutionContext;
 import org.openbbs.blackboard.plan.ControlPlan;
 import org.openbbs.blackboard.plan.PlanStep;
 
@@ -34,7 +35,7 @@ public final class OneStepPlan implements ControlPlan
       return "OneStepPlan";
    }
 
-   public List<PlanStep> getPossibleSteps() {
+   public List<PlanStep> getPossibleSteps(KSExecutionContext context) {
       List<PlanStep> steps = new ArrayList<PlanStep>();
       steps.add(new NamedPlanStep("UNIVERSAL_STEP"));
       return steps;

@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
+import org.openbbs.blackboard.ks.KSExecutionContext;
+import org.openbbs.blackboard.plan.PlanStep;
 
 /**
  * @author stefan
@@ -37,9 +39,9 @@ public class PlanConditionConjunction implements PlanStepCondition
       return this;
    }
 
-   public boolean evaluate() {
+   public boolean evaluate(PlanStep planStep, KSExecutionContext context) {
       for (PlanStepCondition condition : this.conditions)
-         if (!condition.evaluate()) return false;
+         if (!condition.evaluate(planStep, context)) return false;
 
       return true;
    }

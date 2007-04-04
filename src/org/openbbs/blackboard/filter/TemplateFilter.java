@@ -20,22 +20,29 @@ public class TemplateFilter implements EntryFilter
    private final Object template;
    private Collection<PropertyDescriptor> filterProperties;
 
-   public TemplateFilter(Object template) throws Exception {
+   public TemplateFilter(Object template) {
       Validate.notNull(template, "cannot filter by null template");
       this.template = template;
 
       this.filterProperties = new LinkedList<PropertyDescriptor>();
 
-      BeanInfo beanInfo = Introspector.getBeanInfo(template.getClass(), Object.class);
-      for (PropertyDescriptor propertyDesc : beanInfo.getPropertyDescriptors()) {
-         Method readMethod = propertyDesc.getReadMethod();
-         if (readMethod != null) {
-            Object defaultPropertyValue = propertyDesc.getValue(PROPERTY_ATTRIBUTE_DEFAULT_VALUE);
-            Object templatePropertyValue = readMethod.invoke(template, new Object[0]);
-            if (templatePropertyValue != null && !templatePropertyValue.equals(defaultPropertyValue)) {
-               this.filterProperties.add(propertyDesc);
+      try
+      {
+         BeanInfo beanInfo = Introspector.getBeanInfo(template.getClass(), Object.class);
+         for (PropertyDescriptor propertyDesc : beanInfo.getPropertyDescriptors()) {
+            Method readMethod = propertyDesc.getReadMethod();
+            if (readMethod != null) {
+               Object defaultPropertyValue = propertyDesc.getValue(PROPERTY_ATTRIBUTE_DEFAULT_VALUE);
+               Object templatePropertyValue = readMethod.invoke(template, new Object[0]);
+               if (templatePropertyValue != null && !templatePropertyValue.equals(defaultPropertyValue)) {
+                  this.filterProperties.add(propertyDesc);
+               }
             }
          }
+      }
+      catch (Exception exc)
+      {
+         throw new RuntimeException("error while building BeanInfo for template: " + exc.getMessage(), exc);
       }
    }
 
