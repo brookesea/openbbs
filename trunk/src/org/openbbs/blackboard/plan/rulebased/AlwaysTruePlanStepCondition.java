@@ -15,12 +15,15 @@
  */
 package org.openbbs.blackboard.plan.rulebased;
 
+import org.openbbs.blackboard.ks.KSExecutionContext;
+import org.openbbs.blackboard.plan.PlanStep;
+
 /**
  * @autor sks
  */
 public class AlwaysTruePlanStepCondition implements PlanStepCondition
 {
-   public boolean evaluate() {
+   public boolean evaluate(PlanStep planStep, KSExecutionContext context) {
       return true;
    }
 }

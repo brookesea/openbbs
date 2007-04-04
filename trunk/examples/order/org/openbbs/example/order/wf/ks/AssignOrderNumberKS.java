@@ -2,7 +2,7 @@ package org.openbbs.example.order.wf.ks;
 
 import java.util.Random;
 
-import org.openbbs.blackboard.EntryFilter;
+import org.openbbs.blackboard.filter.KindOfFilter;
 import org.openbbs.blackboard.ks.KSExecutionContext;
 import org.openbbs.blackboard.ks.KnowledgeSource;
 import org.openbbs.example.order.model.Order;
@@ -17,7 +17,7 @@ public class AssignOrderNumberKS implements KnowledgeSource
    private static int counter = new Random().nextInt(32);
    
    public void execute(KSExecutionContext context) {
-      Order order = (Order)context.blackboard().take(new OrderWithoutNumberFilter());
+      Order order = (Order)context.blackboard().take(new KindOfFilter(Order.class));
       order.setNumber("ORDER" + order.getCustomer().getNumber() + Integer.toString(counter++));
       context.blackboard().write(order);
    }
@@ -27,13 +27,6 @@ public class AssignOrderNumberKS implements KnowledgeSource
     * without a number.
     */
    public boolean isEnabled(KSExecutionContext context) {
-      return context.blackboard().exists(new OrderWithoutNumberFilter());
-   }
-   
-   private class OrderWithoutNumberFilter implements EntryFilter
-   {
-      public boolean selects(Object entry) {
-         return ((entry instanceof Order) && ((Order)entry).getNumber() == null);
-      }
+      return context.blackboard().exists(new KindOfFilter(Order.class));
    }
 }

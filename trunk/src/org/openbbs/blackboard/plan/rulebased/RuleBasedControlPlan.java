@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
+import org.openbbs.blackboard.ks.KSExecutionContext;
 import org.openbbs.blackboard.plan.ControlPlan;
 import org.openbbs.blackboard.plan.NoStep;
 import org.openbbs.blackboard.plan.PlanStep;
@@ -82,11 +83,11 @@ public class RuleBasedControlPlan implements ControlPlan
       if (!this.steps.remove(step)) throw new IllegalArgumentException(step.toString() + " is not part of this plan");
    }
 
-   public List<PlanStep> getPossibleSteps() {
+   public List<PlanStep> getPossibleSteps(KSExecutionContext context) {
       List<PlanStep> possibleSteps = new ArrayList<PlanStep>();
 
       for (RuleBasedPlanStep candidate : this.steps)
-         if (candidate.isActive()) possibleSteps.add(candidate);
+         if (candidate.isActiveInContext(context)) possibleSteps.add(candidate);
 
       if (possibleSteps.isEmpty()) possibleSteps.add(NoStep.instance);
 

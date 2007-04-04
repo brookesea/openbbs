@@ -105,7 +105,7 @@ public class BlackboardControl
 
          this.runApplicableTransformations(executionContext);
 
-         List<PlanStep> steps = this.plan.getPossibleSteps();
+         List<PlanStep> steps = this.plan.getPossibleSteps(executionContext);
          Validate.notEmpty(steps, "plan did not return any step");
          this.notifyListenersPossibleStepsSelected(steps);
 

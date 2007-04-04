@@ -15,10 +15,13 @@
  */
 package org.openbbs.blackboard.plan.rulebased;
 
+import org.openbbs.blackboard.ks.KSExecutionContext;
+import org.openbbs.blackboard.plan.PlanStep;
+
 /**
  * @author stefan
  */
 public interface PlanStepCondition
 {
-   public boolean evaluate();
+   public boolean evaluate(PlanStep step, KSExecutionContext context);
 }

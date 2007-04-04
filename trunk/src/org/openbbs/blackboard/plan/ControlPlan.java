@@ -17,6 +17,8 @@ package org.openbbs.blackboard.plan;
 
 import java.util.List;
 
+import org.openbbs.blackboard.ks.KSExecutionContext;
+
 /**
  * A control asks a control plan which steps to executed next.
  * 
@@ -32,5 +34,5 @@ public interface ControlPlan
    /**
     * Get the steps which are possible at the moment.
     */
-   public List<PlanStep> getPossibleSteps();
+   public List<PlanStep> getPossibleSteps(KSExecutionContext context);
 }
