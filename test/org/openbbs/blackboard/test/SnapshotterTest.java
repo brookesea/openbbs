@@ -33,7 +33,7 @@ import org.openbbs.blackboard.persistence.snapshot.Snapshotter;
 public class SnapshotterTest extends MockObjectTestCase
 {
    private List<Zone> zones;
-   private Map<Zone, List> entries;
+   private Map<Zone, List<?>> entries;
    private Snapshotter snapshotter;
 
    protected void setUp() throws Exception {
@@ -42,7 +42,7 @@ public class SnapshotterTest extends MockObjectTestCase
       this.zones.add(new NamedZone("Zone_2"));
       this.zones.add(new NamedZone("Zone_3"));
 
-      this.entries = new HashMap<Zone, List>();
+      this.entries = new HashMap<Zone, List<?>>();
       this.entries.put(zones.get(0), Arrays.asList(new String[] { "Entry 1", "Entry 2" }));
       this.entries.put(zones.get(1), Collections.emptyList());
       this.entries.put(zones.get(2), Arrays.asList(new String[] { "Entry 3", "Entry 4" }));
