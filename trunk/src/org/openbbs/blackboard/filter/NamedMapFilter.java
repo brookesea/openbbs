@@ -20,6 +20,6 @@ public class NamedMapFilter implements EntryFilter
       if (!(entry instanceof NamedMap)) {
          return false;
       }
-      return this.mapName.equals(((NamedMap) entry).getName());
+      return this.mapName.equals(((NamedMap<?, ?>) entry).getName());
    }
 }
