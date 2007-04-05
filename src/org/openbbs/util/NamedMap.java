@@ -110,4 +110,6 @@ public class NamedMap<K,V> implements Map<K, V>, Serializable
    public Collection<V> values() {
       return backingStore.values();
    }
+
+   private static final long serialVersionUID = -3768515579962373189L;
 }
