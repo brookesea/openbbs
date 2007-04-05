@@ -59,6 +59,7 @@ public class ReopenSimpleLogFileTest extends TestCase
       assertEquals(this.commands.size(), MockCommand.playbackCount);
    }
 
+   @SuppressWarnings("serial")
    private static class MockCommand implements PrevalenceCommand
    {
       private static int count = 0;
