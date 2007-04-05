@@ -48,4 +48,6 @@ public class OrderItem implements Serializable
       }
       return this.id.equals(((OrderItem)o).id);
    }
+
+   private static final long serialVersionUID = 1034490703267357311L;
 }

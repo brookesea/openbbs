@@ -43,4 +43,6 @@ public class Order implements Serializable
    public String toString() {
       return ToStringBuilder.reflectionToString(this);
    }
+
+   private static final long serialVersionUID = 2587576620823695750L;
 }

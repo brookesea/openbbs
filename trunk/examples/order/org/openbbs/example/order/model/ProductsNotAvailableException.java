@@ -22,4 +22,6 @@ public class ProductsNotAvailableException extends Exception
    public int getQuantity() {
       return quantity;
    }
+
+   private static final long serialVersionUID = -4323266123003135963L;
 }

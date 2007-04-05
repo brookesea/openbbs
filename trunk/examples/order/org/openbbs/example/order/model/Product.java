@@ -34,4 +34,6 @@ public class Product implements Serializable
    public void setCode(String code) {
       this.code = code;
    }
+
+   private static final long serialVersionUID = -246443902310663029L;
 }
