@@ -7,7 +7,7 @@
    <property name="build" value="${basedir}/build" />
    <property name="build.classes" value="${build}/classes" />
    <property name="build.instrumented.classes" value="${build}/instrumented-classes" />
-   <property name="build.tests" value="${build}/tests" />
+   <property name="build.tests" value="${build}/test" />
    <property name="build.test-reports" value="${build}/test-reports" />
    <property name="reports" value="${basedir}/reports" />
    <property name="reports.junit" value="${reports}/junit" />
@@ -18,7 +18,7 @@
    <property name="version" value="0.8" />
    <property name="dist-version" value="${dist}/${version}" />
    
-   <property name="cobertura.home" value="/home/sks/Utilities/cobertura-1.8" />
+   <property name="cobertura.home" value="/Users/stefan/Developer/toolbox/cobertura-1.8" />
    <property name="cobertura.datafile" value="${build}/cobertura.ser" />
 
    <!-- Path definitions -->
