@@ -96,6 +96,7 @@ public class RestorePrevalenceMemoryTest extends TestCase
       assertEquals(this.entry3Changed.getValue(), ((Entry)entry3FromMemory).getValue());
    }
 
+   @SuppressWarnings("serial")
    private static class Entry implements Serializable
    {
       private final Object key;
