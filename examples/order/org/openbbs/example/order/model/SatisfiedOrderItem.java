@@ -16,4 +16,6 @@ public class SatisfiedOrderItem implements Serializable
    public OrderItem getOrderItem() {
       return this.orderItem;
    }
+
+   private static final long serialVersionUID = -3069326597258005291L;
 }

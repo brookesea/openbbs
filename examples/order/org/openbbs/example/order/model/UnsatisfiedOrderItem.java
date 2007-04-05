@@ -26,4 +26,6 @@ public class UnsatisfiedOrderItem implements Serializable
    public String getReason() {
       return this.reason;
    }
+
+   private static final long serialVersionUID = -1590699555117383196L;
 }
