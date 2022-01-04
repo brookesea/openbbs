@@ -17,8 +17,8 @@
    <property name="dist" value="${basedir}/dist" />
    <property name="version" value="0.8" />
    <property name="dist-version" value="${dist}/${version}" />
-   
-   <property name="cobertura.home" value="/Users/stefan/Developer/toolbox/cobertura-1.8" />
+
+   <property name="cobertura.home" value="${build}/dependencies/cobertura-2.1.1" />
    <property name="cobertura.datafile" value="${build}/cobertura.ser" />
 
    <!-- Path definitions -->
@@ -43,7 +43,7 @@
            <include name="lib/**/*.jar" />
        </fileset>
    </path>
-   
+
    <!-- Private targets -->
    <target name="-init-compile">
       <mkdir dir="${build.classes}" />
@@ -76,7 +76,7 @@
       <!-- recreate directory, otherwise Eclipse gets confused -->
       <mkdir dir="${build.tests}" />
    </target>
-   
+
    <target name="-clean-instrumented-classes">
       <delete dir="${build.instrumented.classes}" />
    </target>
@@ -93,13 +93,13 @@
       <delete file="${cobertura.datafile}" />
       <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
    </target>
-   
+
    <target name="-instrument-classes" if="enable-cobertura">
       <cobertura-instrument todir="${build.instrumented.classes}" datafile="${cobertura.datafile}">
          <fileset dir="${build.classes}" includes="**/*.class" />
       </cobertura-instrument>
    </target>
-   
+
    <target name="-compile">
       <javac srcdir="${src}" destdir="${build.classes}" debug="on" classpathref="compile-classpath" />
    </target>
@@ -120,7 +120,7 @@
             <path refid="cobertura.classpath" />
             <pathelement location="${build.tests}" />
             <pathelement location="${build.instrumented.classes}" /> <!-- won't exist or is empty if converage is enabled -->
-            <pathelement location="${build.classes}" /> 
+            <pathelement location="${build.classes}" />
          </classpath>
          <formatter type="xml" usefile="yes" />
          <batchtest todir="${build.test-reports}">
@@ -130,7 +130,7 @@
          </batchtest>
       </junit>
    </target>
-   
+
    <target name="-junit-report">
       <junitreport todir="${build.test-reports}">
          <fileset dir="${build.test-reports}">
@@ -147,7 +147,7 @@
          </fileset>
       </javadoc>
    </target>
-   
+
    <target name="-cobertura-report" if="enable-cobertura">
       <cobertura-report format="html" destdir="${reports.coverage}" srcdir="${src}" datafile="${cobertura.datafile}" />
    </target>
