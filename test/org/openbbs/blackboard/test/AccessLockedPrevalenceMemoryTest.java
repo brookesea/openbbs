@@ -48,7 +48,7 @@ public class AccessLockedPrevalenceMemoryTest extends TestCase
          this.memory.getEntries(new AllZonesSelector(), new AnyObjectFilter());
          fail("MemoryLockException expected");
       }
-      catch (MemoryLockedException _) {
+      catch (MemoryLockedException exception) {
          // ok
       }
    }
@@ -59,7 +59,7 @@ public class AccessLockedPrevalenceMemoryTest extends TestCase
          this.memory.getZone(this.entry);
          fail("MemoryLockException expected");
       }
-      catch (MemoryLockedException _) {
+      catch (MemoryLockedException exception) {
          // ok
       }
    }
@@ -70,7 +70,7 @@ public class AccessLockedPrevalenceMemoryTest extends TestCase
          this.memory.entryExists(this.entry);
          fail("MemoryLockException expected");
       }
-      catch (MemoryLockedException _) {
+      catch (MemoryLockedException exception) {
          // ok
       }
    }
@@ -81,7 +81,7 @@ public class AccessLockedPrevalenceMemoryTest extends TestCase
          this.memory.zoneExists(this.zone);
          fail("MemoryLockException expected");
       }
-      catch (MemoryLockedException _) {
+      catch (MemoryLockedException exception) {
          // ok
       }
    }
@@ -92,7 +92,7 @@ public class AccessLockedPrevalenceMemoryTest extends TestCase
          this.memory.createZone(new NamedZone("NEW_ZONE"));
          fail("MemoryLockException expected");
       }
-      catch (MemoryLockedException _) {
+      catch (MemoryLockedException exception) {
          // ok
       }
    }
@@ -103,7 +103,7 @@ public class AccessLockedPrevalenceMemoryTest extends TestCase
          this.memory.dropZone(this.zone);
          fail("MemoryLockException expected");
       }
-      catch (MemoryLockedException _) {
+      catch (MemoryLockedException exception) {
          // ok
       }
    }
@@ -114,7 +114,7 @@ public class AccessLockedPrevalenceMemoryTest extends TestCase
          this.memory.storeEntry(this.zone, "The quick brown fox jumps over the lazy dog");
          fail("MemoryLockException expected");
       }
-      catch (MemoryLockedException _) {
+      catch (MemoryLockedException exception) {
          // ok
       }
    }
@@ -125,7 +125,7 @@ public class AccessLockedPrevalenceMemoryTest extends TestCase
          this.memory.removeEntry(this.entry);
          fail("MemoryLockException expected");
       }
-      catch (MemoryLockedException _) {
+      catch (MemoryLockedException exception) {
          // ok
       }
    }
@@ -136,7 +136,7 @@ public class AccessLockedPrevalenceMemoryTest extends TestCase
          this.memory.restore();
          fail("MemoryLockException expected");
       }
-      catch (MemoryLockedException _) {
+      catch (MemoryLockedException exception) {
          // ok
       }
       assertFalse(this.memory.isLocked());
@@ -148,7 +148,7 @@ public class AccessLockedPrevalenceMemoryTest extends TestCase
          this.memory.snapshot();
          fail("MemoryLockException expected");
       }
-      catch (MemoryLockedException _) {
+      catch (MemoryLockedException exception) {
          // ok
       }
       assertFalse(this.memory.isLocked());

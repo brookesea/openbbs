@@ -84,7 +84,7 @@ public class TakeEntryFromBlackboardTest extends MockObjectTestCase
             }
          });
          fail("exception expected when take does not select any entry");
-      } catch (ReadBlackboardException _) {
+      } catch (ReadBlackboardException exception) {
       }
    }
 

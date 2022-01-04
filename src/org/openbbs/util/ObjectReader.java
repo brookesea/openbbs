@@ -37,10 +37,10 @@ public class ObjectReader
       try {
          this.inputStream = new ObjectInputStream(new FileInputStream(file));
       }
-      catch (EOFException _) {
+      catch (EOFException exception) {
          this.streamIsEmpty = true;
       }
-      catch (FileNotFoundException _) {
+      catch (FileNotFoundException exception) {
          this.streamIsEmpty = true;
       }
    }
@@ -64,7 +64,7 @@ public class ObjectReader
                Object object = this.inputStream.readObject();
                delegate.didReadObject(object);
             }
-            catch (EOFException _) {
+            catch (EOFException exception) {
                eof = true;
             }
          }

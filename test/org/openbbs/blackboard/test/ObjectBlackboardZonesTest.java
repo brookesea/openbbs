@@ -62,14 +62,14 @@ public class ObjectBlackboardZonesTest extends MockObjectTestCase
       try {
          this.bb.write(fooZone, "Hello World");
          fail("should throw an exception if an entry is written to an unknown zone");
-      } catch (BlackboardZoneException _) {
+      } catch (BlackboardZoneException exception) {
          // expected
       }
 
       this.bb.openZone(fooZone);
       try {
          this.bb.write(fooZone, "Hello World");
-      } catch (BlackboardZoneException _) {
+      } catch (BlackboardZoneException exception) {
          fail("zone is unknown but has been opened");
       }
 
@@ -82,7 +82,7 @@ public class ObjectBlackboardZonesTest extends MockObjectTestCase
       try {
          this.bb.openZone(fooZone);
          fail("it should not be possible to open a zone twice");
-      } catch (BlackboardZoneException _) {
+      } catch (BlackboardZoneException exception) {
          // expected
       }
    }
@@ -147,7 +147,7 @@ public class ObjectBlackboardZonesTest extends MockObjectTestCase
       try {
          this.bb.zoneOf("Unknown Entry");
          fail("exception expected when getting zone of an entry not on the blackboard");
-      } catch (ReadBlackboardException _) {
+      } catch (ReadBlackboardException exception) {
          // expected
       }
    }
@@ -158,7 +158,7 @@ public class ObjectBlackboardZonesTest extends MockObjectTestCase
       try {
          this.bb.write(zone2, "Hello World");
          fail("exception expected when an entry is written to the blackboard for the second time");
-      } catch (WriteBlackboardException _) {
+      } catch (WriteBlackboardException exception) {
          // expected
       }
    }
@@ -225,7 +225,7 @@ public class ObjectBlackboardZonesTest extends MockObjectTestCase
       try {
          this.bb.write(zone1, "Hello World");
          fail("it must not be possible to write to a closed zone");
-      } catch (BlackboardZoneException _) {
+      } catch (BlackboardZoneException exception) {
          // expected
       }
    }
@@ -235,7 +235,7 @@ public class ObjectBlackboardZonesTest extends MockObjectTestCase
       try {
          this.bb.closeZone(new NamedZone("fooZone"));
          fail("it must not be possible to close an unknown zone");
-      } catch (BlackboardZoneException _) {
+      } catch (BlackboardZoneException exception) {
          // expected
       }
    }

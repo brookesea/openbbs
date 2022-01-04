@@ -72,7 +72,7 @@ public class CreditabilityBasedStrategyTest extends TestCase
       try {
          this.strategy.addKnowledgeSource(NoStep.instance, this.source1, 10);
          fail("it shouldn't be possible to assign a source a creditability for NoStep");
-      } catch (IllegalArgumentException _) {
+      } catch (IllegalArgumentException exception) {
          // expected
       }
    }

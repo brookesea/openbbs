@@ -46,7 +46,7 @@ public class CloneByMethodStrategyTest extends MockObjectTestCase
       try {
          new CloneByMethodStrategy("cloneMe").clone("Stefan");
          fail("exception expected if cloned object doesn't respond to clone message");
-      } catch (UnsupportedOperationException _) {
+      } catch (UnsupportedOperationException exception) {
       }
    }
 

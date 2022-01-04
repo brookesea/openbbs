@@ -59,7 +59,7 @@ public class WriteEntryToObjectBlackboardTest extends MockObjectTestCase
       try {
          this.bb.write(Zone.DEFAULT, entry);
          fail("exception expected when writing an entry again");
-      } catch (WriteBlackboardException _) {
+      } catch (WriteBlackboardException exception) {
       }
    }
 

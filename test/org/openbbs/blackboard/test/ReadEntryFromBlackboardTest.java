@@ -144,7 +144,7 @@ public class ReadEntryFromBlackboardTest extends MockObjectTestCase
       try {
          this.bb.write(Zone.DEFAULT, entry);
          fail("exception expected when writing back an object that was read from the blackboard");
-      } catch (WriteBlackboardException _) {
+      } catch (WriteBlackboardException exception) {
       }
    }
 }

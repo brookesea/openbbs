@@ -43,7 +43,7 @@ public class TemplateFilterTest extends TestCase
       assertEquals(1, result.size());
       assertEquals(this.order1, result.iterator().next());
    }
-   
+
    public void testFilterOrdersByProduct() throws Exception {
       Order template = new Order();
       template.setProduct("Dog");
@@ -53,7 +53,7 @@ public class TemplateFilterTest extends TestCase
       assertTrue(result.contains(this.order2));
       assertTrue(result.contains(this.order3));
    }
-   
+
    public void testFilterOrdersByQuantity() throws Exception {
       Order template = new Order();
       template.setQuantity(10);
@@ -62,7 +62,7 @@ public class TemplateFilterTest extends TestCase
       assertTrue(result.contains(this.order1));
       assertTrue(result.contains(this.order3));
    }
-   
+
    public void testFilterOrderByQuantityProduct() throws Exception {
       Order template = new Order();
       template.setProduct("Cat");
@@ -71,7 +71,7 @@ public class TemplateFilterTest extends TestCase
       assertEquals(1, result.size());
       assertTrue(result.contains(this.order1));
    }
-   
+
    public void testFilterWithoutMatches() throws Exception {
       Order template = new Order();
       template.setProduct("Foo");
@@ -136,7 +136,7 @@ public class TemplateFilterTest extends TestCase
       public int hashCode() {
          return new HashCodeBuilder().append(this.number).append(this.product).append(this.quantity).toHashCode();
       }
-      
+
       public String toString() {
          return ToStringBuilder.reflectionToString(this).toString();
       }
@@ -162,7 +162,7 @@ public class TemplateFilterTest extends TestCase
          try {
             PropertyDescriptor number = new PropertyDescriptor("number", Order.class);
             PropertyDescriptor quantity = new PropertyDescriptor("quantity", Order.class);
-            quantity.setValue("defaultValue", new Integer(-1));
+            quantity.setValue("defaultValue", -1);
             PropertyDescriptor product = new PropertyDescriptor("product", Order.class);
             return new PropertyDescriptor[] { number, quantity, product };
          }
